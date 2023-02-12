@@ -7,6 +7,7 @@ builder.AddAppLogger();
 var services = builder.Services;
 services.AddHttpContextAccessor();
 services.AddAppCors();
+services.AddAppVersioning();
 services.AddControllers();
 
 
