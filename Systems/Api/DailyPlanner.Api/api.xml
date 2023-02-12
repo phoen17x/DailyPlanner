@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DailyPlanner.Api</name>
+    </assembly>
+    <members>
+        <member name="T:DailyPlanner.Api.Configuration.CorsConfiguration">
+            <summary>
+            The CORS configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.CorsConfiguration.AddAppCors(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds CORS services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The services collection instance</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.CorsConfiguration.UseAppCors(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Uses CORS in the application.
+            </summary>
+            <param name="app">The application builder instance</param>
+        </member>
+        <member name="T:DailyPlanner.Api.Configuration.LoggerConfiguration">
+            <summary>
+            The logger configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.LoggerConfiguration.AddAppLogger(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            Adds the logger configuration to the application.
+            </summary>
+            <param name="builder">The web application builder instance.</param>
+        </member>
+        <member name="T:DailyPlanner.Api.Configuration.SwaggerConfiguration">
+            <summary>
+            The Swagger configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds Swagger to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The services collection instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.UseAppSwagger(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>
+            Uses Swagger in the specified <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.
+            </summary>
+            <param name="app">The web application.</param>
+        </member>
+        <member name="T:DailyPlanner.Api.Configuration.VersioningConfiguration">
+            <summary>
+            The API versioning configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.VersioningConfiguration.AddAppVersioning(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds the API versioning configuration to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The services collection instance</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+    </members>
+</doc>
