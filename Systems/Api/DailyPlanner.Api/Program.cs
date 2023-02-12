@@ -1,15 +1,14 @@
+using DailyPlanner.Api.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.AddAppLogger();
 
-// Add services to the container.
 
-builder.Services.AddControllers();
+var services = builder.Services;
+services.AddControllers();
+
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
