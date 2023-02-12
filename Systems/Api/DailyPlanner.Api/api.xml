@@ -4,6 +4,18 @@
         <name>DailyPlanner.Api</name>
     </assembly>
     <members>
+        <member name="T:DailyPlanner.Api.Configuration.ControllerConfiguration">
+            <summary>
+            Configures the MVC controllers.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.ControllerConfiguration.AddAppControllers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services for controllers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> and configures them with default settings for JSON serialization.
+            </summary>
+            <param name="services">The services collection instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
         <member name="T:DailyPlanner.Api.Configuration.CorsConfiguration">
             <summary>
             The CORS configuration.

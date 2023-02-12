@@ -9,12 +9,11 @@ services.AddHttpContextAccessor();
 services.AddAppCors();
 services.AddAppVersioning();
 services.AddAppSwagger();
-services.AddControllers();
+services.AddAppControllers();
 
 
 var app = builder.Build();
 app.UseAppCors();
 app.UseAppSwagger();
-app.UseAuthorization();
 app.MapControllers();
 app.Run();
