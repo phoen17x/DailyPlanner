@@ -4,6 +4,18 @@
         <name>DailyPlanner.Api</name>
     </assembly>
     <members>
+        <member name="T:DailyPlanner.Api.Bootstrapper">
+            <summary>
+            Responsible for registering application services in the dependency injection container.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Bootstrapper.RegisterAppServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers the application services in the dependency injection container.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
         <member name="T:DailyPlanner.Api.Configuration.ControllerConfiguration">
             <summary>
             Configures the MVC controllers.
@@ -50,11 +62,12 @@
             The Swagger configuration.
             </summary>
         </member>
-        <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection,DailyPlanner.Services.Settings.SwaggerSettings)">
             <summary>
             Adds Swagger to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
             <param name="services">The services collection instance.</param>
+            <param name="swaggerSettings">The settings for Swagger configuration.</param>
             <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
         </member>
         <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.UseAppSwagger(Microsoft.AspNetCore.Builder.WebApplication)">

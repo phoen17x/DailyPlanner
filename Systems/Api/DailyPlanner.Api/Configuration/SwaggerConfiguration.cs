@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using DailyPlanner.Services.Settings;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -12,15 +13,19 @@ namespace DailyPlanner.Api.Configuration;
 /// </summary>
 public static class SwaggerConfiguration
 {
-    private static string AppTitle = "Daily Planner API";
+    private static string appTitle = "Daily Planner API";
 
     /// <summary>
     /// Adds Swagger to the specified <see cref="IServiceCollection"/>.
     /// </summary>
     /// <param name="services">The services collection instance.</param>
+    /// <param name="swaggerSettings">The settings for Swagger configuration.</param>
     /// <returns>The <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection AddAppSwagger(this IServiceCollection services)
+    public static IServiceCollection AddAppSwagger(this IServiceCollection services, SwaggerSettings? swaggerSettings)
     {
+        if (swaggerSettings is null) return services;
+        if (swaggerSettings.Enabled == false) return services;
+
         services
             .AddOptions<SwaggerGenOptions>()
             .Configure<IApiVersionDescriptionProvider>((options, provider) =>
@@ -29,7 +34,7 @@ public static class SwaggerConfiguration
                 {
                     options.SwaggerDoc(apiVersionDescription.GroupName, new OpenApiInfo
                     {
-                        Title = AppTitle,
+                        Title = appTitle,
                         Version = apiVersionDescription.GroupName
                     });
                 }
@@ -87,6 +92,10 @@ public static class SwaggerConfiguration
     /// <param name="app">The web application.</param>
     public static void UseAppSwagger(this WebApplication app)
     {
+        var swaggerSettings = app.Services.GetService<SwaggerSettings>();
+        if (swaggerSettings is null) return;
+        if (swaggerSettings.Enabled == false) return;
+
         var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
         app.UseSwagger(options =>
@@ -107,7 +116,10 @@ public static class SwaggerConfiguration
 
             options.DocExpansion(DocExpansion.List);
             options.DefaultModelsExpandDepth(-1);
-            options.OAuthAppName(AppTitle);
+            options.OAuthAppName(appTitle);
+
+            options.OAuthClientId(swaggerSettings.OAuthClientId ?? "");
+            options.OAuthClientSecret(swaggerSettings.OAuthClientSecret ?? "");
         });
     }
 }
