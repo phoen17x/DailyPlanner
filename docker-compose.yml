@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  dailyplanner_api:
+    image: ${DOCKER_REGISTRY-}dailyplannerapi
+    build:
+      context: .
+      dockerfile: Systems/Api/DailyPlanner.Api/Dockerfile
