@@ -18,6 +18,7 @@ public class TodoTask : BaseEntity
     public DateTime ActualCompletionTime { get; set; }
     [Required]
     public TodoTaskStatus Status { get; set; }
+    public virtual Notebook Notebook { get; set; }
 }
 
 /// <summary>
