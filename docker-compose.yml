@@ -1,8 +1,13 @@
 version: '3.4'
 
 services:
+  dailyplanner_postgresql:
+    image: postgres:15.2
+
   dailyplanner_api:
     image: ${DOCKER_REGISTRY-}dailyplannerapi
     build:
       context: .
       dockerfile: Systems/Api/DailyPlanner.Api/Dockerfile
+    depends_on:
+      - dailyplanner_postgresql
