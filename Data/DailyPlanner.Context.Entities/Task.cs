@@ -8,16 +8,13 @@ namespace DailyPlanner.Context.Entities;
 /// </summary>
 public class TodoTask : BaseEntity
 {
-    [Required]
     public string Title { get; set; }
     public string Description { get; set; }
-    [Required]
     public DateTime StartTime { get; set;}
-    [Required]
     public DateTime EstimatedCompletionTime { get; set; }
     public DateTime ActualCompletionTime { get; set; }
-    [Required]
     public TodoTaskStatus Status { get; set; }
+    public int NotebookId { get; set; }
     public virtual Notebook Notebook { get; set; }
 }
 
