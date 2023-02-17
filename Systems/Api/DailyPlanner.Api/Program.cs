@@ -1,5 +1,6 @@
 using DailyPlanner.Api;
 using DailyPlanner.Api.Configuration;
+using DailyPlanner.Context;
 using DailyPlanner.Services.Settings;
 using DailyPlanner.Settings;
 
@@ -13,6 +14,7 @@ var swaggerSettings = Settings.Load<SwaggerSettings>("Swagger");
 var services = builder.Services;
 services.AddHttpContextAccessor();
 services.AddAppCors();
+services.AddAppDbContext();
 services.AddAppVersioning();
 services.AddAppSwagger(swaggerSettings);
 services.AddAppControllers();
