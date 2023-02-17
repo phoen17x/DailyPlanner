@@ -1,6 +1,7 @@
 using DailyPlanner.Api;
 using DailyPlanner.Api.Configuration;
 using DailyPlanner.Context;
+using DailyPlanner.Context.Setup;
 using DailyPlanner.Services.Settings;
 using DailyPlanner.Settings;
 
@@ -25,4 +26,7 @@ var app = builder.Build();
 app.UseAppCors();
 app.UseAppSwagger();
 app.MapControllers();
+
+DbInitializer.Execute(app.Services);
+
 app.Run();
