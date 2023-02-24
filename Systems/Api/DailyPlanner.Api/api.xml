@@ -88,5 +88,140 @@
             <param name="services">The services collection instance</param>
             <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
         </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequest">
+            <summary>
+            Represents a request object for a new notebook.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequest.Title">
+            <summary>
+            Gets or sets the title of the notebook.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequestValidator">
+            <summary>
+            Validates the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequest"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequestValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequestValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequestProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequest"/> to <see cref="T:DailyPlanner.Services.Notebooks.Models.AddNotebookModel"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequestProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequestProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse">
+            <summary>
+            Represents a response object for a notebook.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse.Id">
+            <summary>
+            Gets or sets the ID of the notebook.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse.Title">
+            <summary>
+            Gets or sets the title of the notebook.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponseProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Services.Notebooks.Models.NotebookModel"/> to <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponseProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponseProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequest">
+            <summary>
+            Represents a request object for an updated notebook.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequest.Title">
+            <summary>
+            Gets or sets the title of the notebook.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequestValidator">
+            <summary>
+            Validates the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequest"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequestValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequestValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequestProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequest"/> to <see cref="T:DailyPlanner.Services.Notebooks.Models.UpdateNotebookModel"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequestProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequestProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notebooks.NotebookController">
+            <summary>
+            API endpoints for managing notebooks.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.#ctor(AutoMapper.IMapper,DailyPlanner.Services.Notebooks.INotebookService)">
+            <summary>
+            Creates a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.NotebookController"/> class.
+            </summary>
+            <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> instance used for logging.</param>
+            <param name="notebookService">The <see cref="T:DailyPlanner.Services.Notebooks.INotebookService"/> instance used for notebook operations.</param>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.GetNotebooks(System.Int32,System.Int32)">
+            <summary>
+            Gets a list of notebooks.
+            </summary>
+            <param name="offset">The offset to start from.</param>
+            <param name="limit">The maximum number of notebooks to return.</param>
+            <returns>A collection of <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse"/> objects.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.GetNotebook(System.Int32)">
+            <summary>
+            Gets a single notebook by id.
+            </summary>
+            <param name="notebookId">The id of the notebook to get.</param>
+            <returns>A <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse"/> object.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.AddNotebook(DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequest)">
+            <summary>
+            Adds a new notebook.
+            </summary>
+            <param name="request">The <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.AddNotebookRequest"/> object containing the notebook details.</param>
+            <returns>A <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.NotebookResponse"/> object.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.UpdateNotebook(System.Int32,DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequest)">
+            <summary>
+            Updates an existing notebook by id.
+            </summary>
+            <param name="notebookId">The id of the notebook to update.</param>
+            <param name="request">The <see cref="T:DailyPlanner.Api.Controllers.Notebooks.Models.UpdateNotebookRequest"/> object containing the updated notebook details.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.DeleteNotebook(System.Int32)">
+            <summary>
+            Deletes notebook by id.
+            </summary>
+            <param name="notebookId">The id of the notebook to delete.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
+        </member>
     </members>
 </doc>
