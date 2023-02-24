@@ -16,6 +16,7 @@ public class TrimmingConverter : JsonConverter
 
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
-        throw new NotImplementedException();
+        if (value is null) writer.WriteNull();
+        else writer.WriteValue(value.ToString()?.Trim());
     }
 }
