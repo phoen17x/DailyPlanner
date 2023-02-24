@@ -18,6 +18,7 @@ services.AddAppCors();
 services.AddAppDbContext();
 services.AddAppVersioning();
 services.AddAppSwagger(swaggerSettings);
+services.AddAppAutoMapper();
 services.AddAppControllers();
 services.RegisterAppServices();
 
@@ -26,6 +27,7 @@ var app = builder.Build();
 app.UseAppCors();
 app.UseAppSwagger();
 app.MapControllers();
+app.UseAppMiddleware();
 
 DbInitializer.Execute(app.Services);
 
