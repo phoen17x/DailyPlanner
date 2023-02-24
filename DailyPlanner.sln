@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyPlanner.Context.MigrationsPostgreSQL", "Data\Migrations\DailyPlanner.Context.MigrationsPostgreSQL\DailyPlanner.Context.MigrationsPostgreSQL.csproj", "{EF34861F-92B6-4D93-9CB2-DE852B9B5208}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyPlanner.Services.Notebooks", "Services\DailyPlanner.Services.Notebooks\DailyPlanner.Services.Notebooks.csproj", "{A3F3B5D3-9546-4D82-A374-252DFB7B672F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{EF34861F-92B6-4D93-9CB2-DE852B9B5208}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF34861F-92B6-4D93-9CB2-DE852B9B5208}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF34861F-92B6-4D93-9CB2-DE852B9B5208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3F3B5D3-9546-4D82-A374-252DFB7B672F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F3B5D3-9546-4D82-A374-252DFB7B672F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F3B5D3-9546-4D82-A374-252DFB7B672F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F3B5D3-9546-4D82-A374-252DFB7B672F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{836ADDE1-4E5A-49B0-87FD-6294C7913DF7} = {6EAF763A-A8CF-4B75-8574-104809F1DCBB}
 		{CE74125F-1B08-4A39-90C8-9FF862E8DD7C} = {6EAF763A-A8CF-4B75-8574-104809F1DCBB}
 		{EF34861F-92B6-4D93-9CB2-DE852B9B5208} = {CE74125F-1B08-4A39-90C8-9FF862E8DD7C}
+		{A3F3B5D3-9546-4D82-A374-252DFB7B672F} = {F23CA966-EE1F-496E-BABC-F645851436FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366D6BEC-9EA8-44A4-A69E-8EA229C32EA1}

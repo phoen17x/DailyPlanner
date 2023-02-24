@@ -1,4 +1,5 @@
-﻿using DailyPlanner.Services.Settings;
+﻿using DailyPlanner.Services.Notebooks;
+using DailyPlanner.Services.Settings;
 
 namespace DailyPlanner.Api;
 
@@ -15,7 +16,8 @@ public static class Bootstrapper
     public static IServiceCollection RegisterAppServices(this IServiceCollection services)
     {
         services
-            .AddSwaggerSettings();
+            .AddSwaggerSettings()
+            .AddNotebookService();
 
         return services;
     }

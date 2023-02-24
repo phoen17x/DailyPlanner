@@ -11,8 +11,9 @@ COPY ["Data/DailyPlanner.Context/DailyPlanner.Context.csproj", "Data/DailyPlanne
 COPY ["Shared/DailyPlanner.Settings/DailyPlanner.Settings.csproj", "Shared/DailyPlanner.Settings/"]
 COPY ["Data/DailyPlanner.Context.Entities/DailyPlanner.Context.Entities.csproj", "Data/DailyPlanner.Context.Entities/"]
 COPY ["Data/Migrations/DailyPlanner.Context.MigrationsPostgreSQL/DailyPlanner.Context.MigrationsPostgreSQL.csproj", "Data/Migrations/DailyPlanner.Context.MigrationsPostgreSQL/"]
-COPY ["Services/DailyPlanner.Services.Settings/DailyPlanner.Services.Settings.csproj", "Services/DailyPlanner.Services.Settings/"]
+COPY ["Services/DailyPlanner.Services.Notebooks/DailyPlanner.Services.Notebooks.csproj", "Services/DailyPlanner.Services.Notebooks/"]
 COPY ["Shared/DailyPlanner.Common/DailyPlanner.Common.csproj", "Shared/DailyPlanner.Common/"]
+COPY ["Services/DailyPlanner.Services.Settings/DailyPlanner.Services.Settings.csproj", "Services/DailyPlanner.Services.Settings/"]
 RUN dotnet restore "Systems/Api/DailyPlanner.Api/DailyPlanner.Api.csproj"
 COPY . .
 WORKDIR "/src/Systems/Api/DailyPlanner.Api"
