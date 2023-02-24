@@ -17,7 +17,7 @@ public class DailyPlannerContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Notebook>().ToTable("authors");
+        modelBuilder.Entity<Notebook>().ToTable("notebooks");
         modelBuilder.Entity<Notebook>().Property(notebook => notebook.Title).IsRequired();
         modelBuilder.Entity<Notebook>().Property(notebook => notebook.Title).HasMaxLength(50);
 
