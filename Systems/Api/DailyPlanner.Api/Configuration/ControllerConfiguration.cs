@@ -16,7 +16,8 @@ public static class ControllerConfiguration
     {
         services
             .AddControllers()
-            .AddNewtonsoftJson(options => options.SerializerSettings.SetDefaultSettings());
+            .AddNewtonsoftJson(options => options.SerializerSettings.SetDefaultSettings())
+            .AddAppValidator();
 
         return services;
     }
