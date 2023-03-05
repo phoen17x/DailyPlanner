@@ -26,6 +26,5 @@ public enum TodoTaskStatus
     Scheduled,
     Pending,
     Completed,
-    Cancelled,
-    Deleted
+    Cancelled
 }
