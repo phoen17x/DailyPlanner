@@ -1,4 +1,4 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
@@ -14,6 +14,7 @@ COPY ["Data/Migrations/DailyPlanner.Context.MigrationsPostgreSQL/DailyPlanner.Co
 COPY ["Services/DailyPlanner.Services.Notebooks/DailyPlanner.Services.Notebooks.csproj", "Services/DailyPlanner.Services.Notebooks/"]
 COPY ["Shared/DailyPlanner.Common/DailyPlanner.Common.csproj", "Shared/DailyPlanner.Common/"]
 COPY ["Services/DailyPlanner.Services.Settings/DailyPlanner.Services.Settings.csproj", "Services/DailyPlanner.Services.Settings/"]
+COPY ["Services/DailyPlanner.Services.TodoTasks/DailyPlanner.Services.TodoTasks.csproj", "Services/DailyPlanner.Services.TodoTasks/"]
 RUN dotnet restore "Systems/Api/DailyPlanner.Api/DailyPlanner.Api.csproj"
 COPY . .
 WORKDIR "/src/Systems/Api/DailyPlanner.Api"

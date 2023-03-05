@@ -16,6 +16,18 @@
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
             <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
         </member>
+        <member name="T:DailyPlanner.Api.Configuration.AutoMapperConfiguration">
+            <summary>
+            The AutoMapper configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.AutoMapperConfiguration.AddAppAutoMapper(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds AutoMapper to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The service collection to add AutoMapper to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
         <member name="T:DailyPlanner.Api.Configuration.ControllerConfiguration">
             <summary>
             Configures the MVC controllers.
@@ -57,6 +69,17 @@
             </summary>
             <param name="builder">The web application builder instance.</param>
         </member>
+        <member name="T:DailyPlanner.Api.Configuration.MiddlewareConfiguration">
+            <summary>
+            Configures the application to use custom middleware.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.MiddlewareConfiguration.UseAppMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds middleware to the application's request pipeline.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance.</param>
+        </member>
         <member name="T:DailyPlanner.Api.Configuration.SwaggerConfiguration">
             <summary>
             The Swagger configuration.
@@ -75,6 +98,18 @@
             Uses Swagger in the specified <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.
             </summary>
             <param name="app">The web application.</param>
+        </member>
+        <member name="T:DailyPlanner.Api.Configuration.ValidatorConfiguration">
+            <summary>
+            Validator configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.ValidatorConfiguration.AddAppValidator(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
+            <summary>
+            Registers app validators.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> instance.</returns>
         </member>
         <member name="T:DailyPlanner.Api.Configuration.VersioningConfiguration">
             <summary>
@@ -183,7 +218,6 @@
             Creates a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notebooks.NotebookController"/> class.
             </summary>
             <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
-            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> instance used for logging.</param>
             <param name="notebookService">The <see cref="T:DailyPlanner.Services.Notebooks.INotebookService"/> instance used for notebook operations.</param>
         </member>
         <member name="M:DailyPlanner.Api.Controllers.Notebooks.NotebookController.GetNotebooks(System.Int32,System.Int32)">
@@ -222,6 +256,223 @@
             </summary>
             <param name="notebookId">The id of the notebook to delete.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest">
+            <summary>
+            Represents a request object for a new todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest.Title">
+            <summary>
+            Gets or sets the title of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest.Description">
+            <summary>
+            Gets or sets the description of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest.StartTime">
+            <summary>
+            Gets or sets the start time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest.EstimatedCompletionTime">
+            <summary>
+            Gets or sets the estimated completion time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest.NotebookId">
+            <summary>
+            Gets or sets the id of the notebook to which the todotask belongs.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequestValidator">
+            <summary>
+            Validates the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequestValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequestValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskModelProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest"/> to <see cref="T:DailyPlanner.Services.TodoTasks.Models.AddTodoTaskModel"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskModelProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskModelProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse">
+            <summary>
+            Represents a response object for a todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.Id">
+            <summary>
+            Gets or sets the id of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.Title">
+            <summary>
+            Gets or sets the title of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.Description">
+            <summary>
+            Gets or sets the description of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.Status">
+            <summary>
+            Gets or sets the status of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.StartTime">
+            <summary>
+            Gets or sets the start time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.EstimatedCompletionTime">
+            <summary>
+            Gets or sets the estimated completion time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.ActualCompletionTime">
+            <summary>
+            Gets or sets the actual completion time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.NotebookId">
+            <summary>
+            Gets or sets the id of the notebook to which the todotask belongs.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse.NotebookTitle">
+            <summary>
+            Gets or sets the title of the notebook to which the todotask belongs.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponseProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Services.TodoTasks.Models.TodoTaskModel"/> to <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponseProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponseProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest">
+            <summary>
+            Represents a request object for an updated todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.Title">
+            <summary>
+            Gets or sets the title of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.Description">
+            <summary>
+            Gets or sets the description of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.StartTime">
+            <summary>
+            Gets or sets the start time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.EstimatedCompletionTime">
+            <summary>
+            Gets or sets the estimated completion time of the todotask in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.Status">
+            <summary>
+            Gets or sets the status of the todotask.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequestValidator">
+            <summary>
+            Validates the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequestValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequestValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskModelProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest"/> to <see cref="T:DailyPlanner.Services.TodoTasks.Models.UpdateTodoTaskModel"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskModelProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskModelProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController">
+            <summary>
+            API endpoints for managing todotasks.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.#ctor(AutoMapper.IMapper,DailyPlanner.Services.TodoTasks.ITodoTaskService)">
+            <summary>
+            Creates a new instance of the <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController"/> class.
+            </summary>
+            <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
+            <param name="todoTaskService">The <see cref="T:DailyPlanner.Services.TodoTasks.ITodoTaskService"/> instance used for task operations.</param>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.GetTodoTasks(System.Int32)">
+            <summary>
+            Gets a list of todotasks.
+            </summary>
+            <param name="notebookId">ID of the notebook to get todotasks from.</param>
+            <returns>A collection of <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse"/> objects.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.AddTodoTask(DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest)">
+            <summary>
+            Adds a new todotask.
+            </summary>
+            <param name="request">The <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest"/> object containing the todotask details.</param>
+            <returns>A <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse"/> object.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.UpdateTodoTask(System.Int32,DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest)">
+            <summary>
+            Updates an existing todotask by id.
+            </summary>
+            <param name="todoTaskId">The id of the todotask to update.</param>
+            <param name="request">The <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest"/> object containing the updated todotask details.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.DeleteNotebook(System.Int32)">
+            <summary>
+            Deletes todotask by id.
+            </summary>
+            <param name="todoTaskId">The id of the todotask to delete.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
+        </member>
+        <member name="T:DailyPlanner.Api.Middleware.ExceptionMiddleware">
+            <summary>
+            Middleware to handle exceptions and send appropriate error response to client.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Middleware.ExceptionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Middleware.ExceptionMiddleware"/> class.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Middleware.ExceptionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the middleware to catch and handle exceptions.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> to be processed.</param>
         </member>
     </members>
 </doc>
