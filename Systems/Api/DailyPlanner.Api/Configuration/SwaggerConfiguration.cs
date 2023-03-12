@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using DailyPlanner.Common.Security;
 using DailyPlanner.Services.Settings;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
@@ -20,8 +21,9 @@ public static class SwaggerConfiguration
     /// </summary>
     /// <param name="services">The services collection instance.</param>
     /// <param name="swaggerSettings">The settings for Swagger configuration.</param>
+    /// <param name="identitySettings">The settings for identity configuration.</param>
     /// <returns>The <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection AddAppSwagger(this IServiceCollection services, SwaggerSettings? swaggerSettings)
+    public static IServiceCollection AddAppSwagger(this IServiceCollection services, SwaggerSettings? swaggerSettings, IdentitySettings? identitySettings)
     {
         if (swaggerSettings is null) return services;
         if (swaggerSettings.Enabled == false) return services;
@@ -57,7 +59,17 @@ public static class SwaggerConfiguration
                 Scheme = "oauth2",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Flows = new OpenApiOAuthFlows()
+                Flows = new OpenApiOAuthFlows
+                {
+                    Password = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri($"{identitySettings?.Url}/connect/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            {AppScopes.PlannerAccess, "Access to DailyPlanner API"}
+                        }
+                    }
+                }
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -109,7 +121,7 @@ public static class SwaggerConfiguration
 
             provider.ApiVersionDescriptions.ToList().ForEach(
                 apiVersionDescription => options.SwaggerEndpoint(
-                    $"/api/{apiVersionDescription.GroupName}/api.yaml", 
+                    $"/api/{apiVersionDescription.GroupName}/api.yaml",
                     apiVersionDescription.GroupName.ToUpperInvariant()
                 )
             );
