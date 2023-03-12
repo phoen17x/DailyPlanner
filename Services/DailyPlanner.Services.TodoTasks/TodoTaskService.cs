@@ -24,6 +24,7 @@ public class TodoTaskService : ITodoTaskService
     /// <param name="contextFactory">Factory that provides access to the <see cref="DailyPlannerContext"/>.</param>
     /// <param name="mapper">Object mapper that maps entities to models and vice versa.</param>
     /// <param name="addTodoTaskModelValidator">Validator for <see cref="AddTodoTaskModel"/>.</param>
+    /// <param name="updateTodoTaskModelValidator">Validator for <see cref="UpdateTodoTaskModel"/>.</param>
     public TodoTaskService(
         IDbContextFactory<DailyPlannerContext> contextFactory,
         IMapper mapper,
