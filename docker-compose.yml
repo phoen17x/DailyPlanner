@@ -11,3 +11,12 @@ services:
       dockerfile: Systems/Api/DailyPlanner.Api/Dockerfile
     depends_on:
       - dailyplanner_postgresql
+  
+  dailyplanner_identity:
+    image: ${DOCKER_REGISTRY-}dailyplanneridentity
+    build:
+      context: .
+      dockerfile: Systems/Identity/DailyPlanner.Identity/Dockerfile
+    depends_on:
+      - dailyplanner_api
+      - dailyplanner_postgresql

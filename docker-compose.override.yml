@@ -22,6 +22,14 @@ services:
     env_file:
       - env.api
 
+  dailyplanner_identity:
+    ports:
+      - "10001:80"
+    networks:
+      - shared_daily_planner
+    env_file:
+      - env.identity
+
 networks:
   shared_daily_planner:
     name: daily_planner
