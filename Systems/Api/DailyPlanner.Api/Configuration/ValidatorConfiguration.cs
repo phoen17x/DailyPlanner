@@ -31,7 +31,7 @@ public static class ValidatorConfiguration
                         fieldErrors.Add(new ErrorResponseFieldInfo()
                         {
                             FieldName = field.ToCamelCase(),
-                            Message = string.Join(", ", state.Errors.Select(x => x.ErrorMessage))
+                            Message = string.Join(" ", state.Errors.Select(x => x.ErrorMessage))
                         });
                 }
 
