@@ -1,6 +1,7 @@
 ﻿using DailyPlanner.Services.Notebooks;
 using DailyPlanner.Services.Settings;
 using DailyPlanner.Services.TodoTasks;
+using DailyPlanner.Services.UserAccount;
 
 namespace DailyPlanner.Api;
 
@@ -18,6 +19,8 @@ public static class Bootstrapper
     {
         services
             .AddSwaggerSettings()
+            .AddIdentitySettings()
+            .AddUserAccountService()
             .AddNotebookService()
             .AddTodoTaskService();
 

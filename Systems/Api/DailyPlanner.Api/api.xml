@@ -16,6 +16,26 @@
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
             <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
         </member>
+        <member name="T:DailyPlanner.Api.Configuration.AuthConfiguration">
+            <summary>
+            The auth configuration.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.AuthConfiguration.AddAppAuth(Microsoft.Extensions.DependencyInjection.IServiceCollection,DailyPlanner.Services.Settings.IdentitySettings)">
+            <summary>
+            Adds authentication services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="settings">The identity settings to be used for authentication.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Configuration.AuthConfiguration.UseAppAuth(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds authentication and authorization middleware to the specified <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> to add the middleware to.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</returns>
+        </member>
         <member name="T:DailyPlanner.Api.Configuration.AutoMapperConfiguration">
             <summary>
             The AutoMapper configuration.
@@ -85,12 +105,13 @@
             The Swagger configuration.
             </summary>
         </member>
-        <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection,DailyPlanner.Services.Settings.SwaggerSettings)">
+        <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection,DailyPlanner.Services.Settings.SwaggerSettings,DailyPlanner.Services.Settings.IdentitySettings)">
             <summary>
             Adds Swagger to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
             <param name="services">The services collection instance.</param>
             <param name="swaggerSettings">The settings for Swagger configuration.</param>
+            <param name="identitySettings">The settings for identity configuration.</param>
             <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
         </member>
         <member name="M:DailyPlanner.Api.Configuration.SwaggerConfiguration.UseAppSwagger(Microsoft.AspNetCore.Builder.WebApplication)">
@@ -457,6 +478,30 @@
             </summary>
             <param name="todoTaskId">The id of the todotask to delete.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse">
+            <summary>
+            Represents a response object for a todotask.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Accounts.UserAccountController">
+            <summary>
+            API endpoints for managing user accounts.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Accounts.UserAccountController.#ctor(AutoMapper.IMapper,DailyPlanner.Services.UserAccount.IUserAccountService)">
+            <summary>
+            Creates a new instance of the <see cref="!:AccountController"/> class.
+            </summary>
+            <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
+            <param name="userAccountService">The <see cref="T:DailyPlanner.Services.UserAccount.IUserAccountService"/> instance used for user account operations.</param>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Accounts.UserAccountController.AddUserAccount(DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest)">
+            <summary>
+            Adds a new user account.
+            </summary>
+            <param name="request">The <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest"/> object containing the account details.</param>
+            <returns>A <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse"/> object.</returns>
         </member>
         <member name="T:DailyPlanner.Api.Middleware.ExceptionMiddleware">
             <summary>

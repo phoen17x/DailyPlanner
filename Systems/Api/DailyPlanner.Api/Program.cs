@@ -10,14 +10,16 @@ builder.AddAppLogger();
 
 
 var swaggerSettings = Settings.Load<SwaggerSettings>("Swagger");
+var identitySettings = Settings.Load<IdentitySettings>("Identity");
 
 
 var services = builder.Services;
 services.AddHttpContextAccessor();
 services.AddAppCors();
 services.AddAppDbContext();
+services.AddAppAuth(identitySettings);
 services.AddAppVersioning();
-services.AddAppSwagger(swaggerSettings);
+services.AddAppSwagger(swaggerSettings, identitySettings);
 services.AddAppAutoMapper();
 services.AddAppControllers();
 services.RegisterAppServices();
@@ -26,6 +28,7 @@ services.RegisterAppServices();
 var app = builder.Build();
 app.UseAppCors();
 app.UseAppSwagger();
+app.UseAppAuth();
 app.MapControllers();
 app.UseAppMiddleware();
 

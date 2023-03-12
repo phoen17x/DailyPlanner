@@ -18,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -38,6 +39,7 @@
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.Notebooks\DailyPlanner.Services.Notebooks.csproj" />
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.Settings\DailyPlanner.Services.Settings.csproj" />
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.TodoTasks\DailyPlanner.Services.TodoTasks.csproj" />
+    <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.UserAccount\DailyPlanner.Services.UserAccount.csproj" />
     <ProjectReference Include="..\..\..\Shared\DailyPlanner.Common\DailyPlanner.Common.csproj" />
   </ItemGroup>
 

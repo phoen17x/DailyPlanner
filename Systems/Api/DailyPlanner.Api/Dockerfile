@@ -15,6 +15,7 @@ COPY ["Services/DailyPlanner.Services.Notebooks/DailyPlanner.Services.Notebooks.
 COPY ["Shared/DailyPlanner.Common/DailyPlanner.Common.csproj", "Shared/DailyPlanner.Common/"]
 COPY ["Services/DailyPlanner.Services.Settings/DailyPlanner.Services.Settings.csproj", "Services/DailyPlanner.Services.Settings/"]
 COPY ["Services/DailyPlanner.Services.TodoTasks/DailyPlanner.Services.TodoTasks.csproj", "Services/DailyPlanner.Services.TodoTasks/"]
+COPY ["Services/DailyPlanner.Services.UserAccount/DailyPlanner.Services.UserAccount.csproj", "Services/DailyPlanner.Services.UserAccount/"]
 RUN dotnet restore "Systems/Api/DailyPlanner.Api/DailyPlanner.Api.csproj"
 COPY . .
 WORKDIR "/src/Systems/Api/DailyPlanner.Api"
