@@ -1,4 +1,7 @@
 ﻿using DailyPlanner.Context.Entities;
+using DailyPlanner.Context.Entities.User;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DailyPlanner.Context;
@@ -6,7 +9,7 @@ namespace DailyPlanner.Context;
 /// <summary>
 /// Represents the database context.
 /// </summary>
-public class DailyPlannerContext : DbContext
+public class DailyPlannerContext : IdentityDbContext<User, UserRole, Guid>
 {
     public DbSet<Notebook> Notebooks { get; set; }
     public DbSet<TodoTask> TodoTasks { get; set; }
@@ -16,6 +19,14 @@ public class DailyPlannerContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>().ToTable("users");
+        modelBuilder.Entity<UserRole>().ToTable("roles");
+        modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("user_tokens");
+        modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
+        modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("user_logins");
+        modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("user_claims");
 
         modelBuilder.Entity<Notebook>().ToTable("notebooks");
         modelBuilder.Entity<Notebook>().Property(notebook => notebook.Title).IsRequired();
