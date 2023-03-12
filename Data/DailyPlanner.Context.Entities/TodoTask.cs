@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DailyPlanner.Context.Entities.Common;
+﻿using DailyPlanner.Context.Entities.Common;
 
 namespace DailyPlanner.Context.Entities;
 
