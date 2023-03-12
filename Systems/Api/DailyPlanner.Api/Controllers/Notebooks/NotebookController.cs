@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DailyPlanner.Api.Controllers.Notebooks.Models;
 using DailyPlanner.Common.Responses;
+using DailyPlanner.Common.Security;
 using DailyPlanner.Services.Notebooks;
 using DailyPlanner.Services.Notebooks.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DailyPlanner.Api.Controllers.Notebooks;
@@ -13,6 +15,7 @@ namespace DailyPlanner.Api.Controllers.Notebooks;
 [ProducesResponseType(typeof(ErrorResponse), 400)]
 [Produces("application/json")]
 [Route("api/v{version:apiVersion}/notebooks")]
+[Authorize]
 [ApiController]
 [ApiVersion("1.0")]
 public class NotebookController : ControllerBase
@@ -38,6 +41,7 @@ public class NotebookController : ControllerBase
     /// <param name="limit">The maximum number of notebooks to return.</param>
     /// <returns>A collection of <see cref="NotebookResponse"/> objects.</returns>
     [HttpGet]
+    [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IEnumerable<NotebookResponse>), 200)]
     public async Task<IEnumerable<NotebookResponse>> GetNotebooks(
         [FromQuery] int offset = 0,
@@ -53,6 +57,7 @@ public class NotebookController : ControllerBase
     /// <param name="notebookId">The id of the notebook to get.</param>
     /// <returns>A <see cref="NotebookResponse"/> object.</returns>
     [HttpGet("{notebookId}")]
+    [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(NotebookResponse), 200)]
     public async Task<NotebookResponse> GetNotebook([FromRoute] int notebookId)
     {
@@ -66,6 +71,7 @@ public class NotebookController : ControllerBase
     /// <param name="request">The <see cref="AddNotebookRequest"/> object containing the notebook details.</param>
     /// <returns>A <see cref="NotebookResponse"/> object.</returns>
     [HttpPost]
+    [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(NotebookResponse), 200)]
     public async Task<NotebookResponse> AddNotebook([FromBody] AddNotebookRequest request)
     {
@@ -81,6 +87,7 @@ public class NotebookController : ControllerBase
     /// <param name="request">The <see cref="UpdateNotebookRequest"/> object containing the updated notebook details.</param>
     /// <returns>An <see cref="IActionResult"/> indicating success or failure.</returns>
     [HttpPut("{notebookId}")]
+    [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> UpdateNotebook(
         [FromRoute] int notebookId, 
@@ -97,6 +104,7 @@ public class NotebookController : ControllerBase
     /// <param name="notebookId">The id of the notebook to delete.</param>
     /// <returns>An <see cref="IActionResult"/> indicating success or failure.</returns>
     [HttpDelete("{notebookId}")]
+    [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> DeleteNotebook([FromRoute] int notebookId)
     {
