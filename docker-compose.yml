@@ -11,6 +11,9 @@ services:
       dockerfile: Systems/Api/DailyPlanner.Api/Dockerfile
     depends_on:
       - dailyplanner_postgresql
+
+  dailyplanner_rabbitmq:
+    image: rabbitmq:management
   
   dailyplanner_identity:
     image: ${DOCKER_REGISTRY-}dailyplanneridentity
@@ -20,3 +23,13 @@ services:
     depends_on:
       - dailyplanner_api
       - dailyplanner_postgresql
+  
+  dailyplanner_worker:
+    image: ${DOCKER_REGISTRY-}dailyplannerworker
+    build:
+      context: .
+      dockerfile: Systems/Workers/DailyPlanner.Worker/Dockerfile
+    depends_on:
+      - dailyplanner_api
+      - dailyplanner_postgresql
+      - dailyplanner_rabbitmq
