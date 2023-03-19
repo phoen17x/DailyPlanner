@@ -479,9 +479,74 @@
             <param name="todoTaskId">The id of the todotask to delete.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
         </member>
+        <member name="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest">
+            <summary>
+            Represents a request object for a new user.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest.Name">
+            <summary>
+            Gets or sets the name of the user.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest.Email">
+            <summary>
+            Gets or sets the user email.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest.Password">
+            <summary>
+            Gets or sets the user password.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequestValidator">
+            <summary>
+            Validates the <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequestValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequestValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequestProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequest"/> to <see cref="T:DailyPlanner.Services.UserAccount.Models.RegisterUserAccountModel"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequestProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.RegisterUserAccountRequestProfile"/> class.
+            </summary>
+        </member>
         <member name="T:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse">
             <summary>
-            Represents a response object for a todotask.
+            Represents a response object for a user.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse.Id">
+            <summary>
+            Gets or sets the id of the user.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse.Name">
+            <summary>
+            Gets or sets the name of the user.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse.Email">
+            <summary>
+            Gets or sets the user email.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponseProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Services.UserAccount.Models.UserAccountModel"/> to <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponse"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponseProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.UserAccounts.Models.UserAccountResponseProfile"/> class.
             </summary>
         </member>
         <member name="T:DailyPlanner.Api.Controllers.Accounts.UserAccountController">
@@ -491,7 +556,7 @@
         </member>
         <member name="M:DailyPlanner.Api.Controllers.Accounts.UserAccountController.#ctor(AutoMapper.IMapper,DailyPlanner.Services.UserAccount.IUserAccountService)">
             <summary>
-            Creates a new instance of the <see cref="!:AccountController"/> class.
+            Creates a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Accounts.UserAccountController"/> class.
             </summary>
             <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
             <param name="userAccountService">The <see cref="T:DailyPlanner.Services.UserAccount.IUserAccountService"/> instance used for user account operations.</param>

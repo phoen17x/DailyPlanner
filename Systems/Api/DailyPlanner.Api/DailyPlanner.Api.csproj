@@ -36,7 +36,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Data\DailyPlanner.Context\DailyPlanner.Context.csproj" />
     <ProjectReference Include="..\..\..\Data\Migrations\DailyPlanner.Context.MigrationsPostgreSQL\DailyPlanner.Context.MigrationsPostgreSQL.csproj" />
+    <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.Actions\DailyPlanner.Services.Actions.csproj" />
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.Notebooks\DailyPlanner.Services.Notebooks.csproj" />
+    <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.RabbitMq\DailyPlanner.Services.RabbitMq.csproj" />
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.Settings\DailyPlanner.Services.Settings.csproj" />
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.TodoTasks\DailyPlanner.Services.TodoTasks.csproj" />
     <ProjectReference Include="..\..\..\Services\DailyPlanner.Services.UserAccount\DailyPlanner.Services.UserAccount.csproj" />
