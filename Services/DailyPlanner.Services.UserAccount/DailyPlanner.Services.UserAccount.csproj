@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\DailyPlanner.Context.Entities\DailyPlanner.Context.Entities.csproj" />
     <ProjectReference Include="..\..\Shared\DailyPlanner.Common\DailyPlanner.Common.csproj" />
+    <ProjectReference Include="..\DailyPlanner.Services.Actions\DailyPlanner.Services.Actions.csproj" />
   </ItemGroup>
 
 </Project>

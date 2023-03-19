@@ -2,6 +2,8 @@
 using DailyPlanner.Common.Exceptions;
 using DailyPlanner.Common.Validator;
 using DailyPlanner.Context.Entities.User;
+using DailyPlanner.Services.Actions;
+using DailyPlanner.Services.EmailSender.Models;
 using DailyPlanner.Services.UserAccount.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -15,6 +17,7 @@ public class UserAccountService : IUserAccountService
     private readonly IMapper mapper;
     private readonly UserManager<User> userManager;
     private readonly IModelValidator<RegisterUserAccountModel> registerUserAccountModelValidator;
+    private readonly IAction action;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAccountService"/> class.
@@ -22,11 +25,16 @@ public class UserAccountService : IUserAccountService
     /// <param name="mapper">Object mapper that maps entities to models and vice versa.</param>
     /// <param name="userManager">User manager.</param>
     /// <param name="registerUserAccountModelValidator">Validator for <see cref="RegisterUserAccountModel"/>.</param>
-    public UserAccountService(IMapper mapper, UserManager<User> userManager, IModelValidator<RegisterUserAccountModel> registerUserAccountModelValidator)
+    public UserAccountService(
+        IMapper mapper, 
+        UserManager<User> userManager, 
+        IModelValidator<RegisterUserAccountModel> registerUserAccountModelValidator,
+        IAction action)
     {
         this.mapper = mapper;
         this.userManager = userManager;
         this.registerUserAccountModelValidator = registerUserAccountModelValidator;
+        this.action = action;
     }
 
     public async Task<UserAccountModel> AddUserAccount(RegisterUserAccountModel model)
@@ -51,6 +59,14 @@ public class UserAccountService : IUserAccountService
         var result = await userManager.CreateAsync(user, model.Password);
         if (result.Succeeded == false)
             throw new ProcessException($"Cannot create user. {string.Join(" ", result.Errors.Select(s => s.Description))}");
+
+        await action.SendEmail(new EmailModel
+        {
+            Email = model.Email,
+            Subject = "Account Creation",
+            Message = "Successfully registered!"
+        });
+
 
         return mapper.Map<UserAccountModel>(user);
     }
