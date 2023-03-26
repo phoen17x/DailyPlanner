@@ -1,0 +1,18 @@
+﻿@page "/"
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+@layout MainLayout
+
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        @{ NavigationManager.NavigateTo("/notebooks"); }
+    </Authorized>
+    <NotAuthorized>
+        <MudTHeadRow>
+            <MudText Typo="Typo.h4" Class="ma-4">Dashboard</MudText><br />
+        </MudTHeadRow>
+    </NotAuthorized>
+</AuthorizeView>
