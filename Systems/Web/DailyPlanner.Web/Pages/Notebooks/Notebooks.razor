@@ -1,0 +1,127 @@
+﻿@page "/notebooks"
+@using DailyPlanner.Web.Pages.Notebooks.Services
+@using DailyPlanner.Web.Pages.Notebooks.Models
+
+@layout MainLayout
+
+@attribute [Authorize]
+
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject INotebookService NotebookService
+
+<MudText Typo="Typo.h4" Class="ma-8">Notebooks</MudText>
+
+<MudTable Items="@notebooks" Class="ma-8" Dense="@Dense" Hover="@Hover" Bordered="@Bordered" Striped="@Striped" Filter="new Func<Notebook,bool>(FilterFuncSimple)">
+    <ColGroup>
+        <col style="width:50px;" />
+        <col />
+        <col style="width:100px;" />
+    </ColGroup>
+    <ToolBarContent>
+        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(_ => AddNotebook())">Add</MudButton>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="@(_ => EditNotebook(context.Id))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" OnClick="@(_ => DeleteBook(context.Id))" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+@code {
+    private const bool Dense = false;
+    private const bool Hover = true;
+    private const bool Striped = true;
+    private const bool Bordered = false;
+    private string searchString = "";
+
+    private IEnumerable<Notebook> notebooks = new List<Notebook>();
+
+    private async Task ReloadData()
+    {
+        notebooks = await NotebookService.GetNotebooks(0, 100);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private bool FilterFuncSimple(Notebook notebook) => FilterFunc(notebook, searchString);
+
+    private static bool FilterFunc(Notebook notebook, string searchString)
+    {
+        return string.IsNullOrWhiteSpace(searchString) || notebook.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task AddNotebook()
+    {
+        var parameters = new DialogParameters();
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<NotebookDialog>("Add notebook", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            await NotebookService.AddNotebook(((NotebookDialog)dialog.Dialog).Model);
+            await ReloadData();
+        }
+    }
+
+    private async Task EditNotebook(int notebookId)
+    {
+        var parameters = new DialogParameters { { "BookId", notebookId } };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<NotebookDialog>("Edit notebook", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            await NotebookService.EditNotebook(notebookId, ((NotebookDialog)dialog.Dialog).Model);
+            await ReloadData();
+        }
+    }
+
+    private async Task DeleteBook(int notebookId)
+    {
+        var parameters = new DialogParameters
+        {
+            { "ContentText", "Do you really want to delete this notebook? This cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "Color", Color.Error }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete notebook", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            await NotebookService.DeleteNotebook(notebookId);
+            await ReloadData();
+        }
+    }
+}
