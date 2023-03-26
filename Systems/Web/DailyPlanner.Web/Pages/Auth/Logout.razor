@@ -1,0 +1,15 @@
+﻿@page "/logout"
+@using DailyPlanner.Web.Pages.Auth.Services
+
+@attribute [Authorize]
+
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}
