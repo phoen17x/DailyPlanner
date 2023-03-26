@@ -1,0 +1,99 @@
+﻿@page "/login"
+@using DailyPlanner.Web.Pages.Auth.Services
+@using DailyPlanner.Web.Pages.Auth.Models
+@layout SimpleLayout
+
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<MudGrid Justify="Justify.Center" Class="pa-10">
+    <MudItem xs="7" sm="4">
+        <MudPaper Class="pa-4">
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                
+                <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Sign In</MudText>
+
+                <MudAlert Severity="Severity.Error" Class="@(showErrors ? "mb-3 d-block" : "d-none")">
+                    @error
+                    <br />
+                    @errorDetails
+                </MudAlert>
+
+                <MudTextField T="string"
+                                @bind-Value="model.Email" For="@(() => model.Email)"
+                                Label="Email" 
+                                Required="true" 
+                                RequiredError="Email is required!"
+                                HelperText="Input your username"
+                                Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"/>
+                <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
+                                Label="Password" 
+                                HelperText="Input your password"
+                              InputType="@passwordInput"
+                                Adornment="Adornment.End"
+                              AdornmentIcon="@passwordInputIcon"
+                                Required="true"
+                                RequiredError="Password is required!"
+                                OnAdornmentClick="TogglePasswordVisibility" />
+
+                <div Class="d-flex justify-space-between align-center">
+                    <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+                    <MudLink Href="/forgot-password">Forgot password?</MudLink>
+                </div>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           ButtonType="ButtonType.Submit">Sign In</MudButton>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    bool success;
+    MudForm form;
+
+    private LoginModel model = new();
+
+    private bool passwordVisibility;
+    private InputType passwordInput = InputType.Password;
+    private string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private string error;
+    private string errorDetails;
+    private bool showErrors;
+
+    void TogglePasswordVisibility()
+    {
+        @if (passwordVisibility)
+        {
+            passwordVisibility = false;
+            passwordInput = InputType.Password;
+            passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+        }
+        else
+        {
+            passwordVisibility = true;
+            passwordInput = InputType.Text;
+            passwordInputIcon = Icons.Material.Filled.Visibility;
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        showErrors = false;
+        error = "";
+        errorDetails = "";
+
+        var result = await AuthService.Login(model);
+
+        if (result.Successful) NavigationManager.NavigateTo("/");
+        else
+        {
+            error = result.Error;
+            errorDetails = result.ErrorDescription;
+            showErrors = true;
+        }
+    }
+}
