@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize]
+
+<MudStack Row="true" Spacing="4">
+    <AuthorizeView>
+        <Authorized>
+            <MudButton Href="/profile" Variant="Variant.Filled" Color="Color.Info">
+                Profile
+            </MudButton>
+            <MudButton Href="/logout" Variant="Variant.Filled" Color="Color.Secondary">
+                Log Out
+            </MudButton>
+        </Authorized>
+        <NotAuthorized>
+            <MudButton Href="/login" Variant="Variant.Filled" Color="Color.Success">
+                Log In
+            </MudButton>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudStack>
