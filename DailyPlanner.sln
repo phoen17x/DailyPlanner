@@ -51,7 +51,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyPlanner.Services.Email
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workers", "Workers", "{7C7D2A0D-106E-419D-B1A3-832FFE4B1579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyPlanner.Worker", "Systems\Workers\DailyPlanner.Worker\DailyPlanner.Worker.csproj", "{53A5B0C3-DC18-45A6-9DA1-610AB06E4E4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyPlanner.Worker", "Systems\Workers\DailyPlanner.Worker\DailyPlanner.Worker.csproj", "{53A5B0C3-DC18-45A6-9DA1-610AB06E4E4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{0F28BD92-D9C4-4559-A571-F75C48828CEE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyPlanner.Web", "Systems\Web\DailyPlanner.Web\DailyPlanner.Web.csproj", "{FDF7514A-C63A-4FF4-87CF-17F292394544}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +131,10 @@ Global
 		{53A5B0C3-DC18-45A6-9DA1-610AB06E4E4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53A5B0C3-DC18-45A6-9DA1-610AB06E4E4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53A5B0C3-DC18-45A6-9DA1-610AB06E4E4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDF7514A-C63A-4FF4-87CF-17F292394544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDF7514A-C63A-4FF4-87CF-17F292394544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDF7514A-C63A-4FF4-87CF-17F292394544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDF7514A-C63A-4FF4-87CF-17F292394544}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +160,8 @@ Global
 		{74B257ED-EFA8-4DF1-BCDF-0F9295D7A721} = {F23CA966-EE1F-496E-BABC-F645851436FD}
 		{7C7D2A0D-106E-419D-B1A3-832FFE4B1579} = {774CD5A1-E44C-449B-B5E3-39776BFC7829}
 		{53A5B0C3-DC18-45A6-9DA1-610AB06E4E4A} = {7C7D2A0D-106E-419D-B1A3-832FFE4B1579}
+		{0F28BD92-D9C4-4559-A571-F75C48828CEE} = {774CD5A1-E44C-449B-B5E3-39776BFC7829}
+		{FDF7514A-C63A-4FF4-87CF-17F292394544} = {0F28BD92-D9C4-4559-A571-F75C48828CEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366D6BEC-9EA8-44A4-A69E-8EA229C32EA1}
