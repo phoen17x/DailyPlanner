@@ -9,6 +9,7 @@ namespace DailyPlanner.Services.Notebooks.Models;
 /// </summary>
 public class AddNotebookModel
 {
+    public Guid UserId { get; set; }
     public string Title { get; set; } = string.Empty;
 }
 
