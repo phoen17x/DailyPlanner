@@ -37,13 +37,25 @@ public class TodoTaskService : ITodoTaskService
         this.updateTodoTaskModelValidator = updateTodoTaskModelValidator;
     }
 
-    public async Task<IEnumerable<TodoTaskModel>> GetTodoTasks(int notebookId)
+    public async Task<IEnumerable<TodoTaskModel>> GetTodoTasks(Guid userId, int notebookId)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 
-        var todoTasks = context.TodoTasks.Where(task => task.NotebookId == notebookId);
+        var todoTasks = context.TodoTasks
+            .Where(task => task.UserId == userId && task.NotebookId == notebookId);
 
         return (await todoTasks.ToListAsync()).Select(mapper.Map<TodoTaskModel>);
+    }
+
+    public async Task<TodoTaskModel> GetTodoTask(Guid userId, int todoTaskId)
+    {
+        await using var context = await contextFactory.CreateDbContextAsync();
+
+        var todoTask = await context.TodoTasks
+            .Where(task => task.UserId == userId)
+            .FirstOrDefaultAsync(task => task.Id.Equals(todoTaskId));
+
+        return mapper.Map<TodoTaskModel>(todoTask);
     }
 
     public async Task<TodoTaskModel> AddTodoTask(AddTodoTaskModel model)
@@ -64,21 +76,24 @@ public class TodoTaskService : ITodoTaskService
         updateTodoTaskModelValidator.Check(model);
 
         await using var context = await contextFactory.CreateDbContextAsync();
-
-        var todoTask = await context.TodoTasks.FirstOrDefaultAsync(todoTask => todoTask.Id.Equals(todoTaskId));
-        ProcessException.ThrowIfNull(todoTask, $"The notebook with id {todoTaskId} was not found");
+        var todoTask = await context.TodoTasks
+            .Where(task => task.UserId == model.UserId)
+            .FirstOrDefaultAsync(task => task.Id.Equals(todoTaskId));
+        ProcessException.ThrowIfNull(todoTask, $"The task with id {todoTaskId} was not found.");
 
         todoTask = mapper.Map(model, todoTask);
         context.TodoTasks.Update(todoTask!);
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteTodoTask(int todoTaskId)
+    public async Task DeleteTodoTask(Guid userId, int todoTaskId)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 
-        var todoTask = await context.TodoTasks.FirstOrDefaultAsync(todoTask => todoTask.Id.Equals(todoTaskId));
-        ProcessException.ThrowIfNull(todoTask, $"The notebook with id {todoTaskId} was not found");
+        var todoTask = await context.TodoTasks
+            .Where(task => task.UserId == userId)
+            .FirstOrDefaultAsync(task => task.Id.Equals(todoTaskId));
+        ProcessException.ThrowIfNull(todoTask, $"The task with id {todoTaskId} was not found.");
 
         context.Remove(todoTask!);
         await context.SaveChangesAsync();

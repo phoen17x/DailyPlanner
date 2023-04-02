@@ -7,9 +7,18 @@ public interface ITodoTaskService
     /// <summary>
     /// Gets a collection of todotasks.
     /// </summary>
+    /// <param name="userId">User identifier.</param>
     /// <param name="notebookId">ID of the notebook to get todotasks from.</param>
     /// <returns>Collection of <see cref="TodoTaskModel"/> objects.</returns>
-    Task<IEnumerable<TodoTaskModel>> GetTodoTasks(int notebookId);
+    Task<IEnumerable<TodoTaskModel>> GetTodoTasks(Guid userId, int notebookId);
+
+    /// <summary>
+    /// Gets a single todotask by ID.
+    /// </summary>
+    /// <param name="userId">User identifier.</param>
+    /// <param name="todoTaskId">ID of the todotask to retrieve.</param>
+    /// <returns><see cref="TodoTaskModel"/> object.</returns>
+    Task<TodoTaskModel> GetTodoTask(Guid userId, int todoTaskId);
 
     /// <summary>
     /// Adds a new todotask.
@@ -28,6 +37,7 @@ public interface ITodoTaskService
     /// <summary>
     /// Deletes a todotask.
     /// </summary>
+    /// <param name="userId">User identifier.</param>
     /// <param name="todoTaskId">ID of the todotask to delete.</param>
-    Task DeleteTodoTask(int todoTaskId);
+    Task DeleteTodoTask(Guid userId, int todoTaskId);
 }
