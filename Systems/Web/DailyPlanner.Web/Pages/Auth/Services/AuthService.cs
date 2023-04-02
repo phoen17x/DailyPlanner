@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using DailyPlanner.Web.Pages.Auth.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DailyPlanner.Web.Pages.Auth.Services;
 
@@ -25,14 +26,13 @@ public class AuthService : IAuthService
     public async Task<LoginResult> Login(LoginModel loginModel)
     {
         var url = $"{Settings.IdentityRoot}/connect/token";
-
-        var requestBody = new[]
+        var requestBody = new KeyValuePair<string, string>[]
         {
-            new KeyValuePair<string, string>("grant_type", "password"),
-            new KeyValuePair<string, string>("client_id", Settings.ClientId),
-            new KeyValuePair<string, string>("client_secret", Settings.ClientSecret),
-            new KeyValuePair<string, string>("username", loginModel.Email),
-            new KeyValuePair<string, string>("password", loginModel.Password)
+            new("grant_type", "password"),
+            new("client_id", Settings.ClientId),
+            new("client_secret", Settings.ClientSecret),
+            new("username", loginModel.Email),
+            new("password", loginModel.Password)
         };
 
         var requestContent = new FormUrlEncodedContent(requestBody);
@@ -40,7 +40,7 @@ public class AuthService : IAuthService
         var content = await response.Content.ReadAsStringAsync();
 
         var loginResult = JsonSerializer.Deserialize<LoginResult>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResult();
-        loginResult.Successful = response.IsSuccessStatusCode;
+        loginResult.IsSuccessful = response.IsSuccessStatusCode;
 
         if (response.IsSuccessStatusCode == false) return loginResult;
 
@@ -60,5 +60,44 @@ public class AuthService : IAuthService
 
         ((ApiAuthenticationStateProvider)authenticationStateProvider).MarkUserAsLoggedOut();
         httpClient.DefaultRequestHeaders.Authorization = null;
+    }
+
+    public async Task RefreshToken()
+    {
+        var refreshToken = await localStorage.GetItemAsync<string>("refreshToken");
+        if (refreshToken is null)
+        {
+            await Logout();
+            return;
+        }
+
+
+        var url = $"{Settings.IdentityRoot}/connect/token";
+        var requestBody = new KeyValuePair<string, string>[]
+        {
+            new("grant_type", "refresh_token"),
+            new("client_id", Settings.ClientId),
+            new("client_secret", Settings.ClientSecret),
+            new("refresh_token", refreshToken)
+        };
+
+        var requestContent = new FormUrlEncodedContent(requestBody);
+        var response = await httpClient.PostAsync(url, requestContent);
+
+        if (response.IsSuccessStatusCode == false)
+        {
+            await Logout();
+            return;
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+        var loginResult = JsonSerializer.Deserialize<LoginResult>(content,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new LoginResult();
+
+        await localStorage.SetItemAsync("authToken", loginResult.AccessToken);
+        await localStorage.SetItemAsync("refreshToken", loginResult.RefreshToken);
+
+        httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("bearer", loginResult.AccessToken);
     }
 }
