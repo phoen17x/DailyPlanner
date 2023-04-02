@@ -8,5 +8,5 @@ public interface INotebookService
     Task<Notebook> GetNotebook(int notebookId);
     Task AddNotebook(NotebookModel model);
     Task EditNotebook(int notebookId, NotebookModel model);
-    Task DeleteNotebook(int bookId);
+    Task DeleteNotebook(int notebookId);
 }
