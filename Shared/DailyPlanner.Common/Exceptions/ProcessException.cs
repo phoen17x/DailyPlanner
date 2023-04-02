@@ -1,15 +1,24 @@
-﻿namespace DailyPlanner.Common.Exceptions;
+﻿using DailyPlanner.Common.Responses;
+
+namespace DailyPlanner.Common.Exceptions;
 
 /// <summary>
 /// Custom exception class for errors that occur during processing.
 /// </summary>
 public class ProcessException : Exception
 {
+    public ErrorResponse? ErrorResponse { get; set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ProcessException"/> class with a specified error message.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     public ProcessException(string message) : base(message) {}
+
+    public ProcessException(ErrorResponse response) : base(response.Message)
+    {
+        ErrorResponse = response;
+    }
 
     /// <summary>
     /// Throws a <see cref="ProcessException"/> if the specified object is null.
