@@ -15,7 +15,7 @@ public static class ExceptionExtensions
     /// <returns>An <see cref="ErrorResponse"/> object with the exception message.</returns>
     public static ErrorResponse ToErrorResponse(this ProcessException exception)
     {
-        return new ErrorResponse() { Message = exception.Message };
+        return new ErrorResponse { Message = exception.Message };
     }
 
     /// <summary>
@@ -25,6 +25,6 @@ public static class ExceptionExtensions
     /// <returns>An <see cref="ErrorResponse"/> object with the error code and exception message.</returns>
     public static ErrorResponse ToErrorResponse(this Exception exception)
     {
-        return new ErrorResponse() { ErrorCode = -1, Message = exception.Message };
+        return new ErrorResponse { ErrorCode = -1, Message = exception.Message };
     }
 }
