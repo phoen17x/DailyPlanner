@@ -38,12 +38,12 @@ public class NotebookService : INotebookService
     }
     
 
-    public async Task<IEnumerable<NotebookModel>> GetNotebooks(int offset = 0, int limit = 10)
+    public async Task<IEnumerable<NotebookModel>> GetNotebooks(Guid userId, int offset = 0, int limit = 10)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
-
         var notebooks = context.Notebooks.AsQueryable();
         notebooks = notebooks
+            .Where(notebook => notebook.UserId == userId)
             .Skip(Math.Max(offset, 0))
             .Take(Math.Max(0, Math.Min(limit, 1000)));
 
@@ -52,11 +52,13 @@ public class NotebookService : INotebookService
         return data;
     }
 
-    public async Task<NotebookModel> GetNotebook(int notebookId)
+    public async Task<NotebookModel> GetNotebook(Guid userId, int notebookId)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 
-        var notebook = await context.Notebooks.FirstOrDefaultAsync(notebook => notebook.Id.Equals(notebookId));
+        var notebook = await context.Notebooks
+            .Where(notebook => notebook.UserId == userId)
+            .FirstOrDefaultAsync(notebook => notebook.Id.Equals(notebookId));
 
         return mapper.Map<NotebookModel>(notebook);
     }
@@ -79,21 +81,24 @@ public class NotebookService : INotebookService
         updateNotebookModelValidator.Check(model);
 
         await using var context = await contextFactory.CreateDbContextAsync();
-
-        var notebook = await context.Notebooks.FirstOrDefaultAsync(notebook => notebook.Id.Equals(notebookId));
-        ProcessException.ThrowIfNull(notebook, $"The notebook with id {notebookId} was not found");
+        var notebook = await context.Notebooks
+            .Where(notebook => notebook.UserId == model.UserId)
+            .FirstOrDefaultAsync(notebook => notebook.Id.Equals(notebookId));
+        ProcessException.ThrowIfNull(notebook, $"The notebook with id {notebookId} was not found.");
 
         notebook = mapper.Map(model, notebook);
         context.Notebooks.Update(notebook!);
         await context.SaveChangesAsync();
     }
 
-    public async Task DeleteNotebook(int notebookId)
+    public async Task DeleteNotebook(Guid userId, int notebookId)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 
-        var notebook = await context.Notebooks.FirstOrDefaultAsync(notebook => notebook.Id.Equals(notebookId));
-        ProcessException.ThrowIfNull(notebook, $"The notebook with id {notebookId} was not found");
+        var notebook = await context.Notebooks
+            .Where(notebook => notebook.UserId == userId)
+            .FirstOrDefaultAsync(notebook => notebook.Id.Equals(notebookId));
+        ProcessException.ThrowIfNull(notebook, $"The notebook with id {notebookId} was not found.");
 
         context.Remove(notebook!);
         await context.SaveChangesAsync();

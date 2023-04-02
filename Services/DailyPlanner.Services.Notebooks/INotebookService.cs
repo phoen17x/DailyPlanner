@@ -7,17 +7,19 @@ public interface INotebookService
     /// <summary>
     /// Gets a collection of notebooks with optional offset and limit.
     /// </summary>
+    /// <param name="userId">User identifier.</param>
     /// <param name="offset">Number of items to skip from the start of the collection.</param>
     /// <param name="limit">Maximum number of items to return in the collection.</param>
     /// <returns>Collection of <see cref="NotebookModel"/> objects.</returns>
-    Task<IEnumerable<NotebookModel>> GetNotebooks(int offset = 0, int limit = 10);
+    Task<IEnumerable<NotebookModel>> GetNotebooks(Guid userId, int offset = 0, int limit = 10);
 
     /// <summary>
     /// Gets a single notebook by ID.
     /// </summary>
+    /// <param name="userId">User identifier.</param>
     /// <param name="notebookId">ID of the notebook to retrieve.</param>
     /// <returns><see cref="NotebookModel"/> object.</returns>
-    Task<NotebookModel> GetNotebook(int notebookId);
+    Task<NotebookModel> GetNotebook(Guid userId, int notebookId);
 
     /// <summary>
     /// Adds a new notebook.
@@ -36,6 +38,7 @@ public interface INotebookService
     /// <summary>
     /// Deletes a notebook.
     /// </summary>
+    /// <param name="userId">User identifier.</param>
     /// <param name="notebookId">ID of the notebook to delete.</param>
-    Task DeleteNotebook(int notebookId);
+    Task DeleteNotebook(Guid userId, int notebookId);
 }
