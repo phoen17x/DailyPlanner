@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DailyPlanner.Common.Exceptions;
+using DailyPlanner.Common.Responses;
 using DailyPlanner.Common.Validator;
 using DailyPlanner.Context.Entities.User;
 using DailyPlanner.Services.Actions;
@@ -25,9 +26,10 @@ public class UserAccountService : IUserAccountService
     /// <param name="mapper">Object mapper that maps entities to models and vice versa.</param>
     /// <param name="userManager">User manager.</param>
     /// <param name="registerUserAccountModelValidator">Validator for <see cref="RegisterUserAccountModel"/>.</param>
+    /// <param name="action">RabbitMQ actions.</param>
     public UserAccountService(
-        IMapper mapper, 
-        UserManager<User> userManager, 
+        IMapper mapper,
+        UserManager<User> userManager,
         IModelValidator<RegisterUserAccountModel> registerUserAccountModelValidator,
         IAction action)
     {
@@ -43,7 +45,23 @@ public class UserAccountService : IUserAccountService
 
         var user = await userManager.FindByEmailAsync(model.Email);
         if (user is not null)
-            throw new ProcessException($"User with email {model.Email} already exists.");
+        {
+            var fieldErrors = new List<ErrorResponseFieldInfo>
+            {
+                new ErrorResponseFieldInfo()
+                {
+                    FieldName = "email",
+                    Message = $"User with email {model.Email} already exists."
+                }
+            };
+            var errorResponse = new ErrorResponse
+            {
+                Message = "Cannot create user.",
+                FieldErrors = fieldErrors
+            };
+            throw new ProcessException(errorResponse);
+        }
+
 
         user = new User()
         {
@@ -58,7 +76,15 @@ public class UserAccountService : IUserAccountService
 
         var result = await userManager.CreateAsync(user, model.Password);
         if (result.Succeeded == false)
-            throw new ProcessException($"Cannot create user. {string.Join(" ", result.Errors.Select(s => s.Description))}");
+        {
+            var fieldErrors = result.Errors.Select(error => new ErrorResponseFieldInfo { Message = error.Description }).ToList();
+            var errorResponse = new ErrorResponse
+            {
+                Message = "Cannot create user.",
+                FieldErrors = fieldErrors
+            };
+            throw new ProcessException(errorResponse);
+        }
 
         await action.SendEmail(new EmailModel
         {
