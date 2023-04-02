@@ -4,7 +4,7 @@ namespace DailyPlanner.Web.Pages.Auth.Models;
 
 public class LoginResult
 {
-    public bool Successful { get; set; }
+    public bool IsSuccessful { get; set; }
     [JsonPropertyName("scope")] public string Scope { get; set; } 
     [JsonPropertyName("access_token")] public string AccessToken { get; set; }
     [JsonPropertyName("refresh_token")] public string RefreshToken { get; set; }
