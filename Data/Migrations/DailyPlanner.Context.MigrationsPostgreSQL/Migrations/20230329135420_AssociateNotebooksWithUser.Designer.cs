@@ -3,6 +3,7 @@ using System;
 using DailyPlanner.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DailyPlanner.Context.MigrationsPostgreSQL.Migrations
 {
     [DbContext(typeof(DailyPlannerContext))]
-    partial class DailyPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20230329135420_AssociateNotebooksWithUser")]
+    partial class AssociateNotebooksWithUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,17 +90,12 @@ namespace DailyPlanner.Context.MigrationsPostgreSQL.Migrations
                     b.Property<Guid>("Uid")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NotebookId");
 
                     b.HasIndex("Uid")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("tasks", (string)null);
                 });
@@ -323,15 +321,7 @@ namespace DailyPlanner.Context.MigrationsPostgreSQL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DailyPlanner.Context.Entities.User.User", "User")
-                        .WithMany("TodoTasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Notebook");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -393,8 +383,6 @@ namespace DailyPlanner.Context.MigrationsPostgreSQL.Migrations
             modelBuilder.Entity("DailyPlanner.Context.Entities.User.User", b =>
                 {
                     b.Navigation("Notebooks");
-
-                    b.Navigation("TodoTasks");
                 });
 #pragma warning restore 612, 618
         }

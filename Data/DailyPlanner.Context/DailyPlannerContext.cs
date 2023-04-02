@@ -31,6 +31,11 @@ public class DailyPlannerContext : IdentityDbContext<User, UserRole, Guid>
         modelBuilder.Entity<Notebook>().ToTable("notebooks");
         modelBuilder.Entity<Notebook>().Property(notebook => notebook.Title).IsRequired();
         modelBuilder.Entity<Notebook>().Property(notebook => notebook.Title).HasMaxLength(50);
+        modelBuilder.Entity<Notebook>()
+            .HasOne(notebook => notebook.User)
+            .WithMany(user => user.Notebooks)
+            .HasForeignKey(notebook => notebook.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<TodoTask>().ToTable("tasks");
         modelBuilder.Entity<TodoTask>().Property(task => task.Title).IsRequired();
@@ -40,6 +45,11 @@ public class DailyPlannerContext : IdentityDbContext<User, UserRole, Guid>
             .HasOne(task => task.Notebook)
             .WithMany(notebook => notebook.TodoTasks)
             .HasForeignKey(task => task.NotebookId)
+            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<TodoTask>()
+            .HasOne(task => task.User)
+            .WithMany(user => user.TodoTasks)
+            .HasForeignKey(task => task.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

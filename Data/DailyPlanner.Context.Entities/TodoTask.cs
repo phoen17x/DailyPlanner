@@ -15,6 +15,8 @@ public class TodoTask : BaseEntity
     public TodoTaskStatus Status { get; set; }
     public int NotebookId { get; set; }
     public virtual Notebook Notebook { get; set; }
+    public Guid UserId { get; set; }
+    public virtual User.User User { get; set; }
 }
 
 /// <summary>

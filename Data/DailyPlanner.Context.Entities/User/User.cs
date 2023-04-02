@@ -9,6 +9,8 @@ public class User : IdentityUser<Guid>
 {
     public string Name { get; set; }
     public UserStatus Status { get; set; }
+    public ICollection<Notebook> Notebooks { get; set; }
+    public ICollection<TodoTask> TodoTasks { get; set; }
 }
 
 /// <summary>
