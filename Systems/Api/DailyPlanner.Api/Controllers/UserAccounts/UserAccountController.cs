@@ -38,7 +38,7 @@ public class UserAccountController : ControllerBase
     /// <returns>A <see cref="UserAccountResponse"/> object.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(UserAccountResponse), 200)]
-    public async Task<UserAccountResponse> AddUserAccount([FromQuery] RegisterUserAccountRequest request)
+    public async Task<UserAccountResponse> AddUserAccount([FromBody] RegisterUserAccountRequest request)
     {
         var user = await userAccountService.AddUserAccount(mapper.Map<RegisterUserAccountModel>(request));
         var response = mapper.Map<UserAccountResponse>(user);
