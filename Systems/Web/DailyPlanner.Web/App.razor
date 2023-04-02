@@ -1,6 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using DailyPlanner.Web.Providers
+@using DailyPlanner.Web.Pages.Auth.Services
 
 @inject NavigationManager NavigationManager
+@inject IAuthService AuthService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
@@ -26,3 +30,26 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code 
+{
+    private AuthenticationState? AuthenticationState { get; set; }
+    private bool IsAuthenticated => AuthenticationState?.User.Identity?.IsAuthenticated ?? false;
+    private DateTimeOffset TokenExpiration => GetTokenExpirationTime();
+    private bool IsTokenExpired => IsAuthenticated && TokenExpiration < DateTimeOffset.UtcNow;
+
+    private DateTimeOffset GetTokenExpirationTime()
+    {
+        var expClaim = AuthenticationState?.User.Claims.FirstOrDefault(claim => claim.Type == "exp");
+        if (expClaim is not null && long.TryParse(expClaim.Value, out var exp))
+            return DateTimeOffset.FromUnixTimeSeconds(exp);
+
+        return DateTimeOffset.MinValue;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState = await ((ApiAuthenticationStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
+        if (IsAuthenticated == false || IsTokenExpired) await AuthService.RefreshToken();
+    }
+}
