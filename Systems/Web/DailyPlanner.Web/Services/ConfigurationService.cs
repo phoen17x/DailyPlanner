@@ -20,14 +20,4 @@ public class ConfigurationService : IConfigurationService
     {
         await localStorage.SetItemAsync("darkMode", value);
     }
-
-    public async Task<bool> GetNavigationMenuVisible()
-    {
-        return await localStorage.GetItemAsync<bool>("navigationMenuVisible");
-    }
-
-    public async Task SetNavigationMenuVisible(bool value)
-    {
-        await localStorage.SetItemAsync("navigationMenuVisible", value);
-    }
 }
