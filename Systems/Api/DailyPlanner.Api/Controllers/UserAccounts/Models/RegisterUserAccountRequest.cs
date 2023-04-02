@@ -39,7 +39,8 @@ public class RegisterUserAccountRequestValidator : AbstractValidator<RegisterUse
             .MinimumLength(3).WithMessage("Username is too short.");
 
         RuleFor(model => model.Email)
-            .EmailAddress().WithMessage("Email is required.");
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Email is invalid.");
 
         RuleFor(model => model.Password)
             .NotEmpty().WithMessage("Password is required.")
