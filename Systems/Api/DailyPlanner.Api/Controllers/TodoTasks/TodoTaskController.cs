@@ -6,6 +6,7 @@ using DailyPlanner.Services.TodoTasks;
 using DailyPlanner.Services.TodoTasks.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace DailyPlanner.Api.Controllers.TodoTasks;
 
@@ -44,8 +45,24 @@ public class TodoTaskController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<TodoTaskResponse>), 200)]
     public async Task<IEnumerable<TodoTaskResponse>> GetTodoTasks([FromQuery] int notebookId)
     {
-        var todoTasks = await todoTaskService.GetTodoTasks(notebookId);
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var todoTasks = await todoTaskService.GetTodoTasks(userId, notebookId);
         return mapper.Map<IEnumerable<TodoTaskResponse>>(todoTasks);
+    }
+
+    /// <summary>
+    /// Gets a single todotask by id.
+    /// </summary>
+    /// <param name="todoTaskId">The id of the todotask to get.</param>
+    /// <returns>A <see cref="TodoTaskResponse"/> object.</returns>
+    [HttpGet("{todoTaskId}")]
+    [Authorize(AppScopes.PlannerAccess)]
+    [ProducesResponseType(typeof(TodoTaskResponse), 200)]
+    public async Task<TodoTaskResponse> GetNotebook([FromRoute] int todoTaskId)
+    {
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var todoTask = await todoTaskService.GetTodoTask(userId, todoTaskId);
+        return mapper.Map<TodoTaskResponse>(todoTask);
     }
 
     /// <summary>
@@ -59,6 +76,7 @@ public class TodoTaskController : ControllerBase
     public async Task<TodoTaskResponse> AddTodoTask([FromBody] AddTodoTaskRequest request)
     {
         var model = mapper.Map<AddTodoTaskModel>(request);
+        model.UserId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
         var todoTask = await todoTaskService.AddTodoTask(model);
         return mapper.Map<TodoTaskResponse>(todoTask);
     }
@@ -77,6 +95,7 @@ public class TodoTaskController : ControllerBase
         [FromBody] UpdateTodoTaskRequest request)
     {
         var model = mapper.Map<UpdateTodoTaskModel>(request);
+        model.UserId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
         await todoTaskService.UpdateTodoTask(todoTaskId, model);
         return Ok();
     }
@@ -91,7 +110,8 @@ public class TodoTaskController : ControllerBase
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> DeleteNotebook([FromRoute] int todoTaskId)
     {
-        await todoTaskService.DeleteTodoTask(todoTaskId);
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await todoTaskService.DeleteTodoTask(userId, todoTaskId);
         return Ok();
     }
 }

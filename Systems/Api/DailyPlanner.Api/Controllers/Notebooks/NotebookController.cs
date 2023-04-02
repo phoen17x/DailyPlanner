@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using DailyPlanner.Api.Controllers.Notebooks.Models;
 using DailyPlanner.Common.Responses;
 using DailyPlanner.Common.Security;
@@ -47,7 +48,8 @@ public class NotebookController : ControllerBase
         [FromQuery] int offset = 0,
         [FromQuery] int limit = 10)
     {
-        var notebooks = await notebookService.GetNotebooks(offset, limit);
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var notebooks = await notebookService.GetNotebooks(userId, offset, limit);
         return mapper.Map<IEnumerable<NotebookResponse>>(notebooks);
     }
 
@@ -61,7 +63,8 @@ public class NotebookController : ControllerBase
     [ProducesResponseType(typeof(NotebookResponse), 200)]
     public async Task<NotebookResponse> GetNotebook([FromRoute] int notebookId)
     {
-        var notebook = await notebookService.GetNotebook(notebookId);
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var notebook = await notebookService.GetNotebook(userId, notebookId);
         return mapper.Map<NotebookResponse>(notebook);
     }
 
@@ -76,6 +79,7 @@ public class NotebookController : ControllerBase
     public async Task<NotebookResponse> AddNotebook([FromBody] AddNotebookRequest request)
     {
         var model = mapper.Map<AddNotebookModel>(request);
+        model.UserId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
         var notebook = await notebookService.AddNotebook(model);
         return mapper.Map<NotebookResponse>(notebook);
     }
@@ -94,6 +98,7 @@ public class NotebookController : ControllerBase
         [FromBody] UpdateNotebookRequest request)
     {
         var model = mapper.Map<UpdateNotebookModel>(request);
+        model.UserId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
         await notebookService.UpdateNotebook(notebookId, model);
         return Ok();
     }
@@ -108,7 +113,8 @@ public class NotebookController : ControllerBase
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> DeleteNotebook([FromRoute] int notebookId)
     {
-        await notebookService.DeleteNotebook(notebookId);
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await notebookService.DeleteNotebook(userId, notebookId);
         return Ok();
     }
 }
