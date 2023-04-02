@@ -1,0 +1,105 @@
+﻿@page "/signup"
+@using DailyPlanner.Web.Pages.Accounts.Services
+@using DailyPlanner.Web.Pages.Accounts.Models
+@layout SimpleLayout
+
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+<MudGrid Justify="Justify.Center" Class="pa-10">
+    <MudItem xs="7" sm="4">
+        <MudPaper Class="pa-4">
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                
+                <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Sign Up</MudText>
+
+                <MudAlert Severity="Severity.Error" Class="@(showErrors ? "mb-3 d-block" : "d-none")">
+                    @foreach (var error in errors)
+                    {
+                        <p style="font-size: 1rem;">@error</p>
+                    }
+                </MudAlert>
+
+                <MudTextField T="string"
+                              @bind-Value="model.Name" For="@(() => model.Name)"
+                              Label="Name" 
+                              Required="true" 
+                              RequiredError="Name is required!"
+                              HelperText="Enter your name"/>
+                <MudTextField T="string"
+                              @bind-Value="model.Email" For="@(() => model.Email)"
+                              Label="Email" 
+                              Required="true" 
+                              RequiredError="Email is required!"
+                              HelperText="Enter your email"
+                              Validation="@(new EmailAddressAttribute {ErrorMessage = "The email is not valid"})"/>
+                <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
+                              Label="Password"
+                              HelperText="Enter your password"
+                              InputType="@passwordInput"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@passwordInputIcon"
+                              Required="true"
+                              RequiredError="Password is required!"
+                              OnAdornmentClick="TogglePasswordVisibility" />
+                
+                <MudList DisableGutters="true" Dense="true">
+                    <MudListItem>
+                        <MudLink Href="/login">Already have an account?</MudLink>
+                    </MudListItem>
+                </MudList>
+
+                <div Class="d-flex justify-end">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               ButtonType="ButtonType.Submit">Sign Up</MudButton>
+                </div>
+            </EditForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    bool success;
+    MudForm form;
+
+    private SignUpModel model = new();
+
+    private bool passwordVisibility;
+    private InputType passwordInput = InputType.Password;
+    private string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private List<string> errors = new();
+    private bool showErrors;
+
+    void TogglePasswordVisibility()
+    {
+        @if (passwordVisibility)
+        {
+            passwordVisibility = false;
+            passwordInput = InputType.Password;
+            passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+        }
+        else
+        {
+            passwordVisibility = true;
+            passwordInput = InputType.Text;
+            passwordInputIcon = Icons.Material.Filled.Visibility;
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        showErrors = false;
+
+        var result = await AccountService.Register(model);
+
+        if (result.IsSuccessful) NavigationManager.NavigateTo("/login");
+        else
+        {
+            errors = result.Errors.Select(error => error.Message).ToList();
+            showErrors = true;
+        }
+    }
+}
