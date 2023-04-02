@@ -1,0 +1,56 @@
+﻿@page "/notebooks/{notebookId:int}/tasks"
+@using DailyPlanner.Web.Pages.TodoTasks.Models
+@using DailyPlanner.Web.Pages.TodoTasks.Services
+
+
+@layout MainLayout
+
+@inject ISnackbar Snackbar
+@inject ITodoTaskService TodoTaskService
+
+<MudText Typo="Typo.h4" Class="my-8" Style="text-align: center;">Tasks</MudText>
+
+<MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
+
+<MudGrid Class="justify-center px-15">
+    @foreach (var todoTask in todoTasks)
+    {
+        <MudItem Style="width: 260px;">
+            <MudCard>
+                <MudCardHeader Class="d-flex justify-center align-center">
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">@todoTask.Title</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardActions>
+                    <MudIconButton Class="rounded" Style="width: 50%;" Icon="@Icons.Material.Filled.Edit" Color="Color.Default" />
+                    <MudIconButton Class="rounded" Style="width: 50%;" Icon="@Icons.Material.Filled.Delete" Color="Color.Default" />
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+@code
+{
+    [Parameter]
+    public int NotebookId { get; set; }
+    private IEnumerable<TodoTask> todoTasks = new List<TodoTask>();
+
+    private async Task ReloadData()
+    {
+        todoTasks = await TodoTaskService.GetTodoTasks(NotebookId);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
