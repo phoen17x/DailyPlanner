@@ -36,15 +36,23 @@
                                 RequiredError="Password is required!"
                                 OnAdornmentClick="TogglePasswordVisibility" />
 
-                <div Class="d-flex justify-space-between align-center">
-                    <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
-                    <MudLink Href="/forgot-password">Forgot password?</MudLink>
-                </div>
+                <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="Remember me?" Color="Color.Primary" Class="ml-n2 mt-3" Dense="true"></MudCheckBox>
 
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           Size="Size.Large"
-                           ButtonType="ButtonType.Submit">Sign In</MudButton>
+                <MudList DisableGutters="true" Dense="true">
+                    <MudListItem>
+                        <MudLink Href="/signup">Create account</MudLink>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudLink Href="/forgot-password">Forgot password?</MudLink>
+                    </MudListItem>
+                </MudList>
+                
+                <div Class="d-flex justify-end">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               ButtonType="ButtonType.Submit">Sign In</MudButton>
+                </div>
             </EditForm>
         </MudPaper>
     </MudItem>
@@ -88,7 +96,7 @@
 
         var result = await AuthService.Login(model);
 
-        if (result.Successful) NavigationManager.NavigateTo("/");
+        if (result.IsSuccessful) NavigationManager.NavigateTo("/");
         else
         {
             error = result.Error;
