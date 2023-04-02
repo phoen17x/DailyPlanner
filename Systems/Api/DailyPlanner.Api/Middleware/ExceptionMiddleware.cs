@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using DailyPlanner.Common.Exceptions;
+﻿using DailyPlanner.Common.Exceptions;
 using DailyPlanner.Common.Extensions;
 using DailyPlanner.Common.Responses;
+using Newtonsoft.Json;
 
 namespace DailyPlanner.Api.Middleware;
 
@@ -34,7 +34,7 @@ public class ExceptionMiddleware
         }
         catch (ProcessException ex)
         {
-            response = ex.ToErrorResponse();
+            response = ex.ErrorResponse ?? ex.ToErrorResponse();
         }
         catch (Exception ex)
         {
@@ -46,7 +46,9 @@ public class ExceptionMiddleware
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+
+                var settings = new JsonSerializerSettings().SetDefaultSettings();
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
                 await context.Response.StartAsync();
                 await context.Response.CompleteAsync();
             }
