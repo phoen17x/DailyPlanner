@@ -24,7 +24,7 @@ public class TodoTaskService : ITodoTaskService
         if (response.IsSuccessStatusCode == false) throw new Exception(content);
 
         var data = JsonSerializer.Deserialize<IEnumerable<TodoTask>>(content,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new DateTimeConverter("dd/MM/yyyy HH:mm") }}) ?? new List<TodoTask>();
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new DateTimeConverter("dd/MM/yyyy HH:mm")}}) ?? new List<TodoTask>();
 
         return data;
     }
@@ -39,7 +39,7 @@ public class TodoTaskService : ITodoTaskService
         if (response.IsSuccessStatusCode == false) throw new Exception(content);
 
         var data = JsonSerializer.Deserialize<TodoTask>(content,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new TodoTask();
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new DateTimeConverter("dd/MM/yyyy HH:mm")}}) ?? new TodoTask();
 
         return data;
     }
@@ -48,7 +48,7 @@ public class TodoTaskService : ITodoTaskService
     {
         var url = $"{Settings.ApiRoot}/v1/todotasks";
 
-        var body = JsonSerializer.Serialize(model);
+        var body = JsonSerializer.Serialize(model, new JsonSerializerOptions { Converters = { new DateTimeConverter("dd/MM/yyyy HH:mm") } });
         var request = new StringContent(body, Encoding.UTF8, "application/json");
 
         var response = await httpClient.PostAsync(url, request);
@@ -61,11 +61,13 @@ public class TodoTaskService : ITodoTaskService
     {
         var url = $"{Settings.ApiRoot}/v1/todotasks/{todoTaskId}";
 
-        var body = JsonSerializer.Serialize(model);
+        var body = JsonSerializer.Serialize(model, new JsonSerializerOptions { Converters = { new DateTimeConverter("dd/MM/yyyy HH:mm") } });
+        Console.WriteLine(body);
         var request = new StringContent(body, Encoding.UTF8, "application/json");
 
         var response = await httpClient.PutAsync(url, request);
         var content = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(content);
 
         if (response.IsSuccessStatusCode == false) throw new Exception(content);
     }
