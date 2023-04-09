@@ -1,4 +1,5 @@
 ﻿using DailyPlanner.Services.Actions;
+using DailyPlanner.Services.Cache;
 using DailyPlanner.Services.Notebooks;
 using DailyPlanner.Services.RabbitMq;
 using DailyPlanner.Services.Settings;
@@ -23,6 +24,7 @@ public static class Bootstrapper
             .AddSwaggerSettings()
             .AddIdentitySettings()
             .AddRabbitMq()
+            .AddCache()
             .AddUserAccountService()
             .AddNotebookService()
             .AddTodoTaskService()
