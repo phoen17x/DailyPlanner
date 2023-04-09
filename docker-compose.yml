@@ -4,6 +4,9 @@ services:
   dailyplanner_postgresql:
     image: postgres:14.1
 
+  dailyplanner_redis:
+    image: redis
+
   dailyplanner_api:
     image: ${DOCKER_REGISTRY-}dailyplannerapi
     build:
@@ -11,6 +14,7 @@ services:
       dockerfile: Systems/Api/DailyPlanner.Api/Dockerfile
     depends_on:
       - dailyplanner_postgresql
+      - dailyplanner_redis
 
   dailyplanner_rabbitmq:
     image: rabbitmq:management
@@ -33,3 +37,4 @@ services:
       - dailyplanner_api
       - dailyplanner_postgresql
       - dailyplanner_rabbitmq
+      - dailyplanner_redis
