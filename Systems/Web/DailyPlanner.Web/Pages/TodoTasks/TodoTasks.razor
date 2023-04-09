@@ -2,34 +2,49 @@
 @using DailyPlanner.Web.Pages.TodoTasks.Models
 @using DailyPlanner.Web.Pages.TodoTasks.Services
 
-
 @layout MainLayout
 
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 @inject ITodoTaskService TodoTaskService
 
 <MudText Typo="Typo.h4" Class="my-8" Style="text-align: center;">Tasks</MudText>
 
-<MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
+<MudContainer Fixed="true" Class="d-flex gap-10 px-10">
+    <MudContainer Style="width: 200px;" Class="px-0">
+        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(_ => AddTodoTask())">Add</MudButton>
+    </MudContainer>
 
-<MudGrid Class="justify-center px-15">
-    @foreach (var todoTask in todoTasks)
-    {
-        <MudItem Style="width: 260px;">
-            <MudCard>
-                <MudCardHeader Class="d-flex justify-center align-center">
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.h6">@todoTask.Title</MudText>
-                    </CardHeaderContent>
-                </MudCardHeader>
-                <MudCardActions>
-                    <MudIconButton Class="rounded" Style="width: 50%;" Icon="@Icons.Material.Filled.Edit" Color="Color.Default" />
-                    <MudIconButton Class="rounded" Style="width: 50%;" Icon="@Icons.Material.Filled.Delete" Color="Color.Default" />
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-    }
-</MudGrid>
+    <MudContainer Fixed="true" Class="flex-grow-1 px-0">
+        <MudGrid Class="justify-start">
+            @foreach (var todoTask in todoTasks)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3" xl="2" Style="position: relative;">
+                    <MudCard>
+                        <MudCardHeader Class="d-flex justify-center align-center">
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">@todoTask.Title</MudText>
+                                <MudText Typo="Typo.body2">
+                                    @todoTask.StartTimeToString()
+                                </MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText>@todoTask.Description</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Complete</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                    <MudMenu Style="position: absolute; top: 20px; right: 20px;" Icon="@Icons.Material.Filled.MoreVert">
+                        <MudMenuItem OnClick="@(_ => EditTodoTask(todoTask.Id))">Edit</MudMenuItem>
+                        <MudMenuItem OnClick="@(_ => DeleteTodoTask(todoTask.Id))">Delete</MudMenuItem>
+                    </MudMenu>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+</MudContainer>
 
 @code
 {
@@ -51,6 +66,55 @@
         catch (Exception ex)
         {
             Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task AddTodoTask()
+    {
+        var parameters = new DialogParameters();
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<TodoTaskDialog>("Add task", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            await TodoTaskService.AddTodoTask(((TodoTaskDialog)dialog.Dialog).Model);
+            await ReloadData();
+        }
+    }
+
+    private async Task EditTodoTask(int todoTaskId)
+    {
+        var parameters = new DialogParameters { { "TodoTaskId", todoTaskId } };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<TodoTaskDialog>("Edit task", parameters, options);
+        var result = await dialog.Result;
+        if (result.Canceled == false)
+        {
+            await TodoTaskService.EditTodoTask(todoTaskId, ((TodoTaskDialog)dialog.Dialog).Model);
+            await ReloadData();
+        }
+    }
+
+    private async Task DeleteTodoTask(int todoTaskId)
+    {
+        var parameters = new DialogParameters
+        {
+            { "ContentText", "Do you really want to delete this task? This cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "Color", Color.Error }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small};
+
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete task", parameters, options);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            await TodoTaskService.DeleteTodoTask(todoTaskId);
+            await ReloadData();
         }
     }
 }

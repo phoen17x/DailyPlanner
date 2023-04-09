@@ -1,0 +1,110 @@
+﻿@using DailyPlanner.Web.Pages.TodoTasks.Services
+@using DailyPlanner.Web.Pages.TodoTasks.Models
+@inherits MudComponentBase
+
+@inject ITodoTaskService TodoTaskService
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="form" Validation="@(modelValidator.ValidateValue)">
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField Label="Title" @bind-Value="Model.Title"
+                                  For="@(() => Model.Title)"
+                                  Required="true"
+                                  RequiredError="Title is required!"/>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="Description" @bind-Value="Model.Description"
+                                  For="@(() => Model.Description)"
+                                  Required="true"
+                                  RequiredError="Description is required!" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker Label="Start time" @bind-Date="startDate"
+                                   DateFormat="dd.MM.yyyy"
+                                   For="@(() => startDate)"
+                                   Required="true"
+                                   RequiredError="Date is required!" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="startTime"
+                                   For="@(() => startTime)"
+                                   Required="true"
+                                   RequiredError="Time is required!" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker Label="Estimated complition time" @bind-Date="estimatedCompletionDate"
+                                   DateFormat="dd.MM.yyyy"
+                                   For="@(() => estimatedCompletionDate)"
+                                   Required="true"
+                                   RequiredError="Date is required!" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="estimatedCompletionTime"
+                                   For="@(() => estimatedCompletionTime)"
+                                   Required="true"
+                                   RequiredError="Time is required!" />
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+    MudForm form = new();
+    TodoTaskModelValidator modelValidator = new();
+
+    private bool isNew;
+
+    [Parameter]
+    public int? TodoTaskId { get; set; }
+
+    [Parameter]
+    public TodoTaskModel Model { get; set; } = new();
+
+    DateTime? startDate;
+    DateTime? estimatedCompletionDate;
+    TimeSpan? startTime;
+    TimeSpan? estimatedCompletionTime;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isNew = TodoTaskId == null;
+        if (isNew == false)
+        {
+            var todoTask = await TodoTaskService.GetTodoTask(TodoTaskId ?? 0);
+            Model.Id = todoTask.Id;
+            Model.Title = todoTask.Title;
+            Model.Description = todoTask.Description;
+            startDate = todoTask.StartTime.Date;
+            startTime = todoTask.StartTime.TimeOfDay;
+            estimatedCompletionDate = todoTask.EstimatedCompletionTime.Date;
+            estimatedCompletionTime = todoTask.EstimatedCompletionTime.TimeOfDay;
+            Model.ActualCompletionTime = todoTask.ActualCompletionTime;
+            Model.Status = todoTask.Status;
+            Model.NotebookId = todoTask.NotebookId;
+        }
+
+        form.ResetValidation();
+    }
+
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            Model.StartTime = startDate.Value + startTime.Value;
+            Model.EstimatedCompletionTime = estimatedCompletionDate.Value + estimatedCompletionTime.Value;
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}
