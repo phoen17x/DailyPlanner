@@ -24,4 +24,29 @@ public static class JsonSerializationExtensions
 
         return settings;
     }
+
+    public static string ToJsonString(this object obj, JsonSerializerSettings? settings = null)
+    {
+        try
+        {
+            return JsonConvert.SerializeObject(obj, settings ?? new JsonSerializerSettings().SetDefaultSettings());
+        }
+        catch (Exception ex)
+        {
+            throw new JsonException("Failed to convert to json string", ex);
+        }
+    }
+
+    public static T? FromJsonString<T>(this string obj, JsonSerializerSettings? settings = null)
+    {
+        try
+        {
+            return JsonConvert.DeserializeObject<T>(obj, settings ?? new JsonSerializerSettings().SetDefaultSettings());
+        }
+        catch (Exception ex)
+        {
+            throw new JsonException("Failed to convert to string", ex);
+        }
+    }
+
 }
