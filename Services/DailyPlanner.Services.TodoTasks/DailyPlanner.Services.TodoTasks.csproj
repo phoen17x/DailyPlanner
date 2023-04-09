@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\DailyPlanner.Context\DailyPlanner.Context.csproj" />
     <ProjectReference Include="..\..\Shared\DailyPlanner.Common\DailyPlanner.Common.csproj" />
+    <ProjectReference Include="..\DailyPlanner.Services.Cache\DailyPlanner.Services.Cache.csproj" />
   </ItemGroup>
 
 </Project>

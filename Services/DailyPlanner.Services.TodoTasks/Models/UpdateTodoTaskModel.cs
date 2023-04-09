@@ -17,6 +17,7 @@ public class UpdateTodoTaskModel
     public string StartTime { get; set; } = string.Empty;
     public string EstimatedCompletionTime { get; set; } = string.Empty;
     public int Status { get; set; }
+    public int NotebookId { get; set; }
 }
 
 /// <summary>
@@ -38,6 +39,9 @@ public class UpdateTodoTaskModelValidator : AbstractValidator<UpdateTodoTaskMode
 
         RuleFor(model => model.EstimatedCompletionTime)
             .NotEmpty().WithMessage("Estimated completion time is required.");
+
+        RuleFor(model => model.NotebookId)
+            .NotEmpty().WithMessage("Notebook is required.");
     }
 }
 
