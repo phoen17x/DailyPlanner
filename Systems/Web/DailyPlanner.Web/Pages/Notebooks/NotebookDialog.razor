@@ -2,18 +2,17 @@
 @using DailyPlanner.Web.Pages.Notebooks.Models
 @inherits MudComponentBase
 
-@inject INotebookService notebookService
+@inject INotebookService NotebookService
 
 <MudDialog>
     <DialogContent>
         <MudForm Model="Model" @ref="form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
-                <MudItem xs="12" sm="6">
+                <MudItem xs="12">
                     <MudTextField Label="Title" @bind-Value="Model.Title"
                                   For="@(() => Model.Title)"
                                   Required="true"
-                                  RequiredError="Title is required!">
-                    </MudTextField>
+                                  RequiredError="Title is required!"/>
                 </MudItem>
             </MudGrid>
         </MudForm>
@@ -45,7 +44,7 @@
         isNew = NotebookId == null;
         if (isNew == false)
         {
-            var notebook = await notebookService.GetNotebook(NotebookId ?? 0);
+            var notebook = await NotebookService.GetNotebook(NotebookId ?? 0);
             Model.Id = notebook.Id;
             Model.Title = notebook.Title;
         }
