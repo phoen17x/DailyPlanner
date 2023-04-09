@@ -14,9 +14,9 @@ public class TodoTaskModel
     public int NotebookId { get; set; }
 }
 
-public class NotebookModelValidator : AbstractValidator<TodoTaskModel>
+public class TodoTaskModelValidator : AbstractValidator<TodoTaskModel>
 {
-    public NotebookModelValidator()
+    public TodoTaskModelValidator()
     {
         RuleFor(model => model.Title)
             .NotEmpty().WithMessage("Title is required.")
