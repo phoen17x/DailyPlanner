@@ -33,6 +33,11 @@ public class UpdateTodoTaskRequest
     /// Gets or sets the status of the todotask.
     /// </summary>
     public int Status { get; set; }
+
+    /// <summary>
+    /// Gets or sets the id of the notebook to which the todotask belongs.
+    /// </summary>
+    public int NotebookId { get; set; }
 }
 
 /// <summary>
@@ -57,6 +62,9 @@ public class UpdateTodoTaskRequestValidator : AbstractValidator<UpdateTodoTaskRe
 
         RuleFor(model => model.EstimatedCompletionTime)
             .NotEmpty().WithMessage("Estimated completion time is required.");
+
+        RuleFor(model => model.NotebookId)
+            .NotEmpty().WithMessage("Notebook is required.");
     }
 }
 
