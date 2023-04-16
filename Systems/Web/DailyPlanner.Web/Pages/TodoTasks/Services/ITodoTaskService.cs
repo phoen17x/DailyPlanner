@@ -4,6 +4,7 @@ namespace DailyPlanner.Web.Pages.TodoTasks.Services;
 
 public interface ITodoTaskService
 {
+    Task<IEnumerable<TodoTask>> GetTodoTasks();
     Task<IEnumerable<TodoTask>> GetTodoTasks(int notebookId);
     Task<TodoTask> GetTodoTask(int todoTaskId);
     Task AddTodoTask(TodoTaskModel model);

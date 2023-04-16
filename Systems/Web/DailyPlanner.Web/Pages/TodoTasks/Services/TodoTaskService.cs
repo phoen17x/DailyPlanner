@@ -14,6 +14,21 @@ public class TodoTaskService : ITodoTaskService
         this.httpClient = httpClient;
     }
 
+    public async Task<IEnumerable<TodoTask>> GetTodoTasks()
+    {
+        var url = $"{Settings.ApiRoot}/v1/todotasks/all";
+
+        var response = await httpClient.GetAsync(url);
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode == false) throw new Exception(content);
+
+        var data = JsonSerializer.Deserialize<IEnumerable<TodoTask>>(content,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new DateTimeConverter("dd/MM/yyyy HH:mm") } }) ?? new List<TodoTask>();
+
+        return data;
+    }
+
     public async Task<IEnumerable<TodoTask>> GetTodoTasks(int notebookId)
     {
         var url = $"{Settings.ApiRoot}/v1/todotasks?notebookId={notebookId}";
