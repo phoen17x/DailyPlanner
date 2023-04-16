@@ -38,6 +38,20 @@ public class TodoTaskController : ControllerBase
     /// <summary>
     /// Gets a list of todotasks.
     /// </summary>
+    /// <returns>A collection of <see cref="TodoTaskResponse"/> objects.</returns>
+    [HttpGet("all")]
+    [Authorize(AppScopes.PlannerAccess)]
+    [ProducesResponseType(typeof(IEnumerable<TodoTaskResponse>), 200)]
+    public async Task<IEnumerable<TodoTaskResponse>> GetTodoTasks()
+    {
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var todoTasks = await todoTaskService.GetTodoTasks(userId);
+        return mapper.Map<IEnumerable<TodoTaskResponse>>(todoTasks);
+    }
+
+    /// <summary>
+    /// Gets a list of todotasks.
+    /// </summary>
     /// <param name="notebookId">ID of the notebook to get todotasks from.</param>
     /// <returns>A collection of <see cref="TodoTaskResponse"/> objects.</returns>
     [HttpGet]
