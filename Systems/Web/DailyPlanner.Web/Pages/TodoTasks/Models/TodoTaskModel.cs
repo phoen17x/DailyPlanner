@@ -12,6 +12,20 @@ public class TodoTaskModel
     public DateTime ActualCompletionTime { get; set; }
     public TodoTaskStatus Status { get; set; }
     public int NotebookId { get; set; }
+
+    public TodoTaskModel() {}
+
+    public TodoTaskModel(TodoTask todotask)
+    {
+        Id = todotask.Id;
+        Title = todotask.Title;
+        Description = todotask.Description;
+        StartTime = todotask.StartTime;
+        EstimatedCompletionTime = todotask.EstimatedCompletionTime;
+        ActualCompletionTime = todotask.ActualCompletionTime;
+        Status = todotask.Status;
+        NotebookId = todotask.NotebookId;
+    }
 }
 
 public class TodoTaskModelValidator : AbstractValidator<TodoTaskModel>
