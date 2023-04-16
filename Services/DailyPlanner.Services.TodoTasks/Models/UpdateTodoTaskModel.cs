@@ -16,6 +16,7 @@ public class UpdateTodoTaskModel
     public string Description { get; set; } = string.Empty;
     public string StartTime { get; set; } = string.Empty;
     public string EstimatedCompletionTime { get; set; } = string.Empty;
+    public string ActualCompletionTime { get; set; } = string.Empty;
     public int Status { get; set; }
     public int NotebookId { get; set; }
 }
@@ -40,6 +41,9 @@ public class UpdateTodoTaskModelValidator : AbstractValidator<UpdateTodoTaskMode
         RuleFor(model => model.EstimatedCompletionTime)
             .NotEmpty().WithMessage("Estimated completion time is required.");
 
+        RuleFor(model => model.ActualCompletionTime)
+            .NotEmpty().WithMessage("Actual completion time is required.");
+
         RuleFor(model => model.NotebookId)
             .NotEmpty().WithMessage("Notebook is required.");
     }
@@ -59,6 +63,10 @@ public class UpdateTodoTaskModelProfile : Profile
             .ForMember(dest => dest.EstimatedCompletionTime,
                 options => options.MapFrom(src => DateTime.ParseExact(src.EstimatedCompletionTime,
                     DATE_TIME_WITHOUT_SECONDS,
+                    System.Globalization.CultureInfo.InvariantCulture).SetKindUtc()))
+            .ForMember(dest => dest.ActualCompletionTime,
+                options => options.MapFrom(src => DateTime.ParseExact(src.ActualCompletionTime, 
+                    DATE_TIME_WITHOUT_SECONDS, 
                     System.Globalization.CultureInfo.InvariantCulture).SetKindUtc()))
             .ForMember(dest => dest.Status, options => options.MapFrom(src => src.Status.ToEnum<TodoTaskStatus>()));
     }
