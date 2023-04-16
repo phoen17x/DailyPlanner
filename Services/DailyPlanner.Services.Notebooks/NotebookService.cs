@@ -83,8 +83,7 @@ public class NotebookService : INotebookService
         await context.Notebooks.AddAsync(notebook);
         await context.SaveChangesAsync();
 
-        var cacheKey = $"dailyplanner:notebooks-{model.UserId}";
-        await cacheService.Delete(cacheKey);
+        await cacheService.Delete($"dailyplanner:notebooks-{model.UserId}");
 
         return mapper.Map<NotebookModel>(notebook);
     }
@@ -102,8 +101,7 @@ public class NotebookService : INotebookService
         notebook = mapper.Map(model, notebook);
         context.Notebooks.Update(notebook!);
 
-        var cacheKey = $"dailyplanner:notebooks-{model.UserId}";
-        await cacheService.Delete(cacheKey);
+        await cacheService.Delete($"dailyplanner:notebooks-{model.UserId}");
 
         await context.SaveChangesAsync();
     }
@@ -119,8 +117,8 @@ public class NotebookService : INotebookService
 
         context.Remove(notebook!);
 
-        var cacheKey = $"dailyplanner:notebooks-{userId}";
-        await cacheService.Delete(cacheKey);
+        await cacheService.Delete($"dailyplanner:notebooks-{userId}");
+        await cacheService.Delete($"dailyplanner:todotasks-{userId}");
 
         await context.SaveChangesAsync();
     }
