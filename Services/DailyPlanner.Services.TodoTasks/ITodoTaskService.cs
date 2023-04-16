@@ -8,6 +8,13 @@ public interface ITodoTaskService
     /// Gets a collection of todotasks.
     /// </summary>
     /// <param name="userId">User identifier.</param>
+    /// <returns>Collection of <see cref="TodoTaskModel"/> objects.</returns>
+    Task<IEnumerable<TodoTaskModel>> GetTodoTasks(Guid userId);
+
+    /// <summary>
+    /// Gets a collection of todotasks.
+    /// </summary>
+    /// <param name="userId">User identifier.</param>
     /// <param name="notebookId">ID of the notebook to get todotasks from.</param>
     /// <returns>Collection of <see cref="TodoTaskModel"/> objects.</returns>
     Task<IEnumerable<TodoTaskModel>> GetTodoTasks(Guid userId, int notebookId);
