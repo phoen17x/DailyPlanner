@@ -1,0 +1,108 @@
+﻿@page "/task-report"
+@using DailyPlanner.Web.Pages.TodoTasks.Models
+@using DailyPlanner.Web.Pages.TodoTasks.Services
+
+@inject ISnackbar Snackbar
+@inject ITodoTaskService TodoTaskService
+
+<MudContainer Fixed="true" Class="px-10" Style="min-height: 100%;">
+    <MudTabs Elevation="2" Rounded="true" Centered="true" ApplyEffectsToContainer="true" PanelClass="pa-6" Style="min-height: 100%;">
+        <MudTabPanel Text="Last Week">
+            @if (lastWeekData.Sum() > 0)
+            {
+                <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom" Width="300px" Height="300px"
+                          InputData="@lastWeekData" InputLabels="@labels">
+                </MudChart>
+            }
+            else
+            {
+                <MudText Align="Align.Center" Style="font-size: 40px;">No tasks this week.</MudText>
+            }
+        </MudTabPanel>
+        <MudTabPanel Text="Last Month">
+            @if (lastWeekData.Sum() > 0)
+            {
+                <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom" Width="300px" Height="300px"
+                          InputData="@lastMonthData" InputLabels="@labels">
+                </MudChart>
+            }
+            else
+            {
+                <MudText Align="Align.Center" Style="font-size: 40px;">No tasks this month.</MudText>
+            }
+        </MudTabPanel>
+        <MudTabPanel Text="Whole Time">
+            @if (lastWeekData.Sum() > 0)
+            {
+                <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom" Width="300px" Height="300px"
+                          InputData="@wholeTimeData" InputLabels="@labels">
+                </MudChart>
+            }
+            else
+            {
+                <MudText Align="Align.Center" Style="font-size: 40px;">No tasks yet.</MudText>
+            }
+        </MudTabPanel>
+    </MudTabs>
+</MudContainer>
+
+@code
+{
+    private readonly string[] labels = { "Completed on time", "Time exceeded", "Canceled", "In progress" };
+    private double[] lastWeekData = { 0, 0, 0, 0 };
+    private double[] lastMonthData = { 0, 0, 0, 0 };
+    private double[] wholeTimeData = { 0, 0, 0, 0 };
+
+    private IEnumerable<TodoTask> todoTasks = new List<TodoTask>();
+    private bool isDataLoaded;
+
+    private async Task ReloadData()
+    {
+        todoTasks = await TodoTaskService.GetTodoTasks();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+            UpdateChartData();
+            isDataLoaded = true;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private void UpdateChartData()
+    {
+        foreach (var task in todoTasks)
+        {
+            if (task.Status == TodoTaskStatus.Completed && task.ActualCompletionTime <= task.EstimatedCompletionTime)
+            {
+                if (task.StartTime >= DateTime.Now.AddDays(-7)) lastWeekData[0]++;
+                if (task.StartTime >= DateTime.Now.AddDays(-30)) lastMonthData[0]++;
+                wholeTimeData[0]++;
+            }
+            else if (task.Status == TodoTaskStatus.Completed && task.ActualCompletionTime > task.EstimatedCompletionTime)
+            {
+                if (task.StartTime >= DateTime.Now.AddDays(-7)) lastWeekData[1]++;
+                if (task.StartTime >= DateTime.Now.AddDays(-30)) lastMonthData[1]++;
+                wholeTimeData[1]++;
+            }
+            else if (task.Status == TodoTaskStatus.Canceled)
+            {
+                if (task.StartTime >= DateTime.Now.AddDays(-7)) lastWeekData[2]++;
+                if (task.StartTime >= DateTime.Now.AddDays(-30)) lastMonthData[2]++;
+                wholeTimeData[2]++;
+            }
+            else if (task.StartTime <= DateTime.Now)
+            {
+                if (task.StartTime >= DateTime.Now.AddDays(-7)) lastWeekData[3]++;
+                if (task.StartTime >= DateTime.Now.AddDays(-30)) lastMonthData[3]++;
+                wholeTimeData[3]++;
+            }
+        }
+    }
+}
