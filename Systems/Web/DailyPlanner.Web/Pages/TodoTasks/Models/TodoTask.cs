@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace DailyPlanner.Web.Pages.TodoTasks.Models;
+﻿namespace DailyPlanner.Web.Pages.TodoTasks.Models;
 
 public class TodoTask
 {
@@ -26,25 +24,7 @@ public class TodoTask
 
     public string DateTimeToString()
     {
-        if (StartTime.ToShortDateString() == EstimatedCompletionTime.ToShortDateString())
-        {
-            if (DateTime.Today.ToShortDateString() == StartTime.ToShortDateString())
-                return $"Today {StartTime:HH:mm} - {EstimatedCompletionTime:HH:mm}";
-            
-            if (DateTime.Today.AddDays(1).ToShortDateString() == StartTime.ToShortDateString())
-                return $"Tomorrow {StartTime:HH:mm} - {EstimatedCompletionTime:HH:mm}";
-
-            return $"{StartTime.ToString("d MMMM yyyy")} {StartTime:HH:mm} - {EstimatedCompletionTime:HH:mm}";
-        }
-
-        if (DateTime.Today.ToShortDateString() == StartTime.ToShortDateString() &&
-            DateTime.Today.AddDays(1).ToShortDateString() == StartTime.ToShortDateString())
-            return $"Today {StartTime:HH:mm} - Tomorrow {EstimatedCompletionTime:HH:mm}";
-
-        if (DateTime.Today.AddDays(1).ToShortDateString() == StartTime.ToShortDateString())
-            return $"Tomorrow {StartTime:HH:mm} - {EstimatedCompletionTime.ToString("d MMMM yyyy")} {EstimatedCompletionTime:HH:mm}";
-
-        return $"{StartTime.ToString("d MMMM yyyy")} {StartTime:HH:mm} - {EstimatedCompletionTime.ToString("d MMMM yyyy")} {EstimatedCompletionTime:HH:mm}";
+        return $"{StartTime:MMM d, yyyy, h:mm tt} - {EstimatedCompletionTime:MMM d, yyyy, h:mm tt}";
     }
 }   
 
@@ -53,5 +33,5 @@ public enum TodoTaskStatus
     Scheduled,
     Pending,
     Completed,
-    Cancelled
+    Canceled
 }
