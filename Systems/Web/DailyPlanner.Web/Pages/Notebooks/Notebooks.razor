@@ -1,6 +1,7 @@
 ﻿@page "/notebooks"
 @using DailyPlanner.Web.Pages.Notebooks.Services
 @using DailyPlanner.Web.Pages.Notebooks.Models
+@using Microsoft.IdentityModel.Tokens
 
 @layout MainLayout
 
@@ -10,44 +11,61 @@
 @inject IDialogService DialogService
 @inject INotebookService NotebookService
 
-<MudText Typo="Typo.h4" Class="my-8" Style="text-align: center;">Notebooks</MudText>
-
-<MudContainer Fixed="true" Class="d-flex gap-10 px-10">
-    <MudContainer Style="width: 200px;" Class="px-0">
+<MudContainer Fixed="true" Class="d-flex gap-10 px-10" Style="min-height: 100%;">
+    <MudPaper Style="width: 200px;" Class="px-2 pb-2 align-self-start">
+        <MudText Class="ma-4" Style="text-align: center; font-size: 26px;">Notebooks</MudText>
         <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(_ => AddNotebook())">Add</MudButton>
-    </MudContainer>
-
-    <MudContainer Fixed="true" Class="flex-grow-1 px-0">
-        <MudGrid Class="justify-start">
-            @foreach (var notebook in notebooks)
-            {
-                <MudItem xs="12" sm="6" md="4" lg="3" xl="2" Style="position: relative;">
-                    <MudLink Href="@($"/notebooks/{notebook.Id}/tasks")" Underline="Underline.None">
-                        <MudCard>
-                            <MudCardHeader Class="d-flex justify-center align-center">
-                                <CardHeaderContent>
-                                    <MudText Typo="Typo.h6">@notebook.Title</MudText>
-                                </CardHeaderContent>
-                            </MudCardHeader>
-                        </MudCard>
-                    </MudLink>
-                    <MudMenu Style="position: absolute; top: 20px; right: 20px;" Icon="@Icons.Material.Filled.MoreVert">
-                        <MudMenuItem OnClick="@(_ => EditNotebook(notebook.Id))">Edit</MudMenuItem>
-                        <MudMenuItem OnClick="@(_ => DeleteNotebook(notebook.Id))">Delete</MudMenuItem>
-                    </MudMenu>
-                </MudItem>
-            }
-        </MudGrid>
+    </MudPaper>
+    
+    <MudContainer Fixed="true" Class="d-flex flex-grow-1 justify-center align-center px-0">
+        @if (isDataLoaded == false)
+        {
+            <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+        }
+        else if (notebooks.IsNullOrEmpty())
+        {
+            <MudText Align="Align.Center" Style="font-size: 40px;">No notebooks yet.</MudText>
+        }
+        else
+        {
+            <MudContainer Class="px-0" Style="max-width: 100%; min-height: 100%;">
+                <MudGrid Class="justify-start align-self-start">
+                    @foreach (var notebook in notebooks)
+                    {
+                        <MudItem xs="12" sm="6" md="4" lg="3" xl="2" Style="position: relative;">
+                            <MudCard>
+                                <MudLink Color="Color.Inherit" Href="@($"/notebooks/{notebook.Id}/tasks")" Underline="Underline.None">
+                                    <MudCardHeader Class="d-flex justify-center align-center">
+                                        <CardHeaderContent>
+                                            <MudText Typo="Typo.h6">@notebook.Title</MudText>
+                                        </CardHeaderContent>
+                                    </MudCardHeader>
+                                </MudLink>
+                                <MudCardActions>
+                                    <MudButton Href="@($"/notebooks/{notebook.Id}/tasks")" Class="mr-2" Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open</MudButton>
+                                    <MudMenu Variant="Variant.Filled" Color="Color.Info" Icon="@Icons.Material.Filled.MoreHoriz">
+                                        <MudMenuItem OnClick="@(_ => EditNotebook(notebook.Id))">Edit</MudMenuItem>
+                                        <MudMenuItem OnClick="@(_ => DeleteNotebook(notebook.Id))">Delete</MudMenuItem>
+                                    </MudMenu>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudContainer>
+        }
     </MudContainer>
 </MudContainer>
 
 
 @code {
     private IEnumerable<Notebook> notebooks = new List<Notebook>();
+    private bool isDataLoaded;
 
     private async Task ReloadData()
     {
         notebooks = await NotebookService.GetNotebooks(0, 100);
+        notebooks = notebooks.OrderBy(notebook => notebook.Id);
     }
 
     protected override async Task OnInitializedAsync()
@@ -55,6 +73,7 @@
         try
         {
             await ReloadData();
+            isDataLoaded = true;
         }
         catch (Exception ex)
         {
