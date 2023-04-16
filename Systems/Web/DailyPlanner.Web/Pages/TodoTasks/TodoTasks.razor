@@ -1,6 +1,7 @@
 ﻿@page "/notebooks/{notebookId:int}/tasks"
 @using DailyPlanner.Web.Pages.TodoTasks.Models
 @using DailyPlanner.Web.Pages.TodoTasks.Services
+@using Microsoft.IdentityModel.Tokens
 
 @layout MainLayout
 
@@ -8,41 +9,81 @@
 @inject IDialogService DialogService
 @inject ITodoTaskService TodoTaskService
 
-<MudText Typo="Typo.h4" Class="my-8" Style="text-align: center;">Tasks</MudText>
-
-<MudContainer Fixed="true" Class="d-flex gap-10 px-10">
-    <MudContainer Style="width: 200px;" Class="px-0">
+<MudContainer Fixed="true" Class="d-flex gap-10 px-10" Style="min-height: 100%;">
+    <MudPaper Style="width: 200px;" Class="px-2 pb-2 align-self-start">
+        <MudText Class="ma-4" Style="text-align: center; font-size: 26px;">Tasks</MudText>
         <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(_ => AddTodoTask())">Add</MudButton>
-    </MudContainer>
-
-    <MudContainer Fixed="true" Class="flex-grow-1 px-0">
-        <MudGrid Class="justify-start">
-            @foreach (var todoTask in todoTasks)
-            {
-                <MudItem xs="12" sm="6" md="4" lg="3" xl="2" Style="position: relative;">
-                    <MudCard>
-                        <MudCardHeader Class="d-flex justify-center align-center">
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.h6">@todoTask.Title</MudText>
-                                <MudText Typo="Typo.body2">
-                                    @todoTask.StartTimeToString()
-                                </MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudCardContent>
-                            <MudText>@todoTask.Description</MudText>
-                        </MudCardContent>
-                        <MudCardActions>
-                            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Complete</MudButton>
-                        </MudCardActions>
-                    </MudCard>
-                    <MudMenu Style="position: absolute; top: 20px; right: 20px;" Icon="@Icons.Material.Filled.MoreVert">
-                        <MudMenuItem OnClick="@(_ => EditTodoTask(todoTask.Id))">Edit</MudMenuItem>
-                        <MudMenuItem OnClick="@(_ => DeleteTodoTask(todoTask.Id))">Delete</MudMenuItem>
-                    </MudMenu>
-                </MudItem>
-            }
-        </MudGrid>
+    </MudPaper>
+    
+    <MudContainer Fixed="true" Class="d-flex flex-grow-1 justify-center align-center px-0">
+        @if (isDataLoaded == false)
+        {
+            <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+        }
+        else if (todoTasks.IsNullOrEmpty())
+        {
+            <MudText Align="Align.Center" Style="font-size: 40px;">No tasks in this notebook yet.</MudText>
+        }
+        else
+        {
+            <MudContainer Class="px-0" Style="max-width: 100%; min-height: 100%;">
+                <MudGrid Class="justify-start align-self-start">
+                    @foreach (var todoTask in todoTasks)
+                    {
+                        <MudItem xs="12" sm="6" md="4" lg="3" xl="2" Style="position: relative;">
+                            <MudCard>
+                                <MudCardHeader Class="d-flex justify-center align-center">
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h6">@todoTask.Title</MudText>
+                                        <MudText Typo="Typo.body2">
+                                            @todoTask.StartTimeToString()
+                                        </MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText>@todoTask.Description</MudText>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    @if (todoTask.Status == TodoTaskStatus.Completed)
+                                    {
+                                        <MudButton Class="mr-2"
+                                                   Variant="Variant.Filled"
+                                                   FullWidth="true"
+                                                   Color="Color.Success"
+                                                   OnClick="@(_ => SetTodoTaskToScheduled(todoTask.Id))">Completed</MudButton>
+                                    }
+                                    else if (todoTask.Status == TodoTaskStatus.Canceled)
+                                    {
+                                        <MudButton Class="mr-2"
+                                                   Variant="Variant.Filled"
+                                                   FullWidth="true"
+                                                   Color="Color.Error"
+                                                   OnClick="@(_ => SetTodoTaskToScheduled(todoTask.Id))">Canceled</MudButton>
+                                    }
+                                    else
+                                    {
+                                        <MudButton Class="mr-2" 
+                                                   Variant="Variant.Filled" 
+                                                   FullWidth="true" 
+                                                   Color="Color.Primary" 
+                                                   OnClick="@(_ => CompleteTodoTask(todoTask.Id))">Complete</MudButton>
+                                    }
+                                    <MudMenu Variant="Variant.Filled" Color="Color.Info" Icon="@Icons.Material.Filled.MoreHoriz">
+                                        <MudMenuItem OnClick="@(_ => EditTodoTask(todoTask.Id))">Edit</MudMenuItem>
+                                        <MudMenuItem OnClick="@(_ => CopyTodoTask(todoTask.Id))">Copy</MudMenuItem>
+                                        @if (todoTask.Status is not (TodoTaskStatus.Canceled or TodoTaskStatus.Completed))
+                                        {
+                                            <MudMenuItem OnClick="@(_ => CancelTodoTask(todoTask.Id))">Cancel</MudMenuItem>
+                                        }
+                                        <MudMenuItem OnClick="@(_ => DeleteTodoTask(todoTask.Id))">Delete</MudMenuItem>
+                                    </MudMenu>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudContainer>
+        }
     </MudContainer>
 </MudContainer>
 
@@ -51,10 +92,12 @@
     [Parameter]
     public int NotebookId { get; set; }
     private IEnumerable<TodoTask> todoTasks = new List<TodoTask>();
+    private bool isDataLoaded;
 
     private async Task ReloadData()
     {
         todoTasks = await TodoTaskService.GetTodoTasks(NotebookId);
+        todoTasks = todoTasks.OrderBy(todoTask => todoTask.Id);
     }
 
     protected override async Task OnInitializedAsync()
@@ -62,6 +105,7 @@
         try
         {
             await ReloadData();
+            isDataLoaded = true;
         }
         catch (Exception ex)
         {
@@ -79,7 +123,10 @@
 
         if (result.Canceled == false)
         {
-            await TodoTaskService.AddTodoTask(((TodoTaskDialog)dialog.Dialog).Model);
+            var model = ((TodoTaskDialog)dialog.Dialog).Model;
+            model.NotebookId = NotebookId;
+
+            await TodoTaskService.AddTodoTask(model);
             await ReloadData();
         }
     }
@@ -96,6 +143,42 @@
             await TodoTaskService.EditTodoTask(todoTaskId, ((TodoTaskDialog)dialog.Dialog).Model);
             await ReloadData();
         }
+    }
+
+    private async Task CompleteTodoTask(int todoTaskId)
+    {
+        var todotask = await TodoTaskService.GetTodoTask(todoTaskId);
+        var model = new TodoTaskModel(todotask) { Status = TodoTaskStatus.Completed, ActualCompletionTime = DateTime.Now };
+
+        await TodoTaskService.EditTodoTask(todoTaskId, model);
+        await ReloadData();
+    }
+
+    private async Task CancelTodoTask(int todoTaskId)
+    {
+        var todotask = await TodoTaskService.GetTodoTask(todoTaskId);
+        var model = new TodoTaskModel(todotask) { Status = TodoTaskStatus.Canceled };
+
+        await TodoTaskService.EditTodoTask(todoTaskId, model);
+        await ReloadData();
+    }
+    
+    private async Task SetTodoTaskToScheduled(int todoTaskId)
+    {
+        var todotask = await TodoTaskService.GetTodoTask(todoTaskId);
+        var model = new TodoTaskModel(todotask) { Status = TodoTaskStatus.Scheduled, ActualCompletionTime = DateTime.MinValue };
+
+        await TodoTaskService.EditTodoTask(todoTaskId, model);
+        await ReloadData();
+    }
+
+    private async Task CopyTodoTask(int todoTaskId)
+    {
+        var todotask = await TodoTaskService.GetTodoTask(todoTaskId);
+        var model = new TodoTaskModel(todotask);
+
+        await TodoTaskService.AddTodoTask(model);
+        await ReloadData();
     }
 
     private async Task DeleteTodoTask(int todoTaskId)
