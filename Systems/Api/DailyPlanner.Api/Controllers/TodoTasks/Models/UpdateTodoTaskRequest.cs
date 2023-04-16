@@ -30,6 +30,11 @@ public class UpdateTodoTaskRequest
     public string EstimatedCompletionTime { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the actual completion time of the todotask in string format.
+    /// </summary>
+    public string ActualCompletionTime { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the status of the todotask.
     /// </summary>
     public int Status { get; set; }
@@ -62,6 +67,9 @@ public class UpdateTodoTaskRequestValidator : AbstractValidator<UpdateTodoTaskRe
 
         RuleFor(model => model.EstimatedCompletionTime)
             .NotEmpty().WithMessage("Estimated completion time is required.");
+
+        RuleFor(model => model.ActualCompletionTime)
+            .NotEmpty().WithMessage("Actual completion time is required.");
 
         RuleFor(model => model.NotebookId)
             .NotEmpty().WithMessage("Notebook is required.");
