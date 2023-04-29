@@ -13,6 +13,7 @@ public class TodoTask : BaseEntity
     public DateTime EstimatedCompletionTime { get; set; }
     public DateTime ActualCompletionTime { get; set; }
     public TodoTaskStatus Status { get; set; }
+    public bool IsReminderSent { get; set; }
     public int NotebookId { get; set; }
     public virtual Notebook Notebook { get; set; }
     public Guid UserId { get; set; }
@@ -25,7 +26,6 @@ public class TodoTask : BaseEntity
 public enum TodoTaskStatus
 {
     Scheduled,
-    Pending,
     Completed,
     Canceled
 }
