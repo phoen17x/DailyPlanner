@@ -7,16 +7,14 @@
 <MudSnackbarProvider />
 
 <MudLayout Style="min-height: 100vh; display: flex; flex-direction: column; margin: 0;">
-    <MudAppBar Elevation="1">
-        <MudLink Href="" Underline="Underline.None" Color="Color.Default">
-            <MudText Typo="Typo.h4">Daily Planner</MudText>
+    <MudAppBar Elevation="1" Class="px-4">
+        <MudLink Href="" Underline="Underline.None">
+            <MudText Typo="Typo.h4" Style="@($"color:{(darkMode ? "#ffffffb2" : "#ffffffff")};")">Daily Planner</MudText>
         </MudLink>
         <MudSpacer/>
-        <MudButtonGroup Variant="Variant.Text">
-            <MudButton Href="/notebooks">Notebooks</MudButton>
-            <MudButton Href="/timeline">Timeline</MudButton>
-            <MudButton Href="/task-report">Task report</MudButton>
-        </MudButtonGroup>
+        <MudButton Href="/notebooks" Style="@($"color:{(darkMode ? "#ffffffb2" : "#ffffffff")};")">Notebooks</MudButton>
+        <MudButton Href="/timeline" Style="@($"color:{(darkMode ? "#ffffffb2" : "#ffffffff")};")">Timeline</MudButton>
+        <MudButton Href="/task-report" Style="@($"color:{(darkMode ? "#ffffffb2" : "#ffffffff")};")">Task report</MudButton>
         <MudSpacer/>
         <MudIconButton Class="mr-4"
                        Icon="@(darkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
@@ -34,8 +32,8 @@
     </MudContainer>
 </MudLayout>
 
-<MudScrollToTop Style="z-index:2001;">
-    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowCircleUp" />
+<MudScrollToTop Style="right: 40px; bottom: 40px; z-index:2001;">
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowCircleUp" />
 </MudScrollToTop>
 
 @code {
