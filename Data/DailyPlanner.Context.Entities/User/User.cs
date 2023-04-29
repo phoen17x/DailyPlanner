@@ -11,6 +11,7 @@ public class User : IdentityUser<Guid>
     public UserStatus Status { get; set; }
     public ICollection<Notebook> Notebooks { get; set; }
     public ICollection<TodoTask> TodoTasks { get; set; }
+    public ICollection<Notification> Notifications { get; set; }
 }
 
 /// <summary>

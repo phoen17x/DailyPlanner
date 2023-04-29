@@ -1,6 +1,7 @@
 ﻿using DailyPlanner.Services.Actions;
 using DailyPlanner.Services.Cache;
 using DailyPlanner.Services.Notebooks;
+using DailyPlanner.Services.Notifications;
 using DailyPlanner.Services.RabbitMq;
 using DailyPlanner.Services.Settings;
 using DailyPlanner.Services.TodoTasks;
@@ -28,7 +29,8 @@ public static class Bootstrapper
             .AddUserAccountService()
             .AddNotebookService()
             .AddTodoTaskService()
-            .AddActions();
+            .AddActions()
+            .AddNotificationService();
 
         return services;
     }

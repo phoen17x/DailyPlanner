@@ -21,6 +21,7 @@ services.AddAppAuth(identitySettings);
 services.AddAppVersioning();
 services.AddAppSwagger(swaggerSettings, identitySettings);
 services.AddAppAutoMapper();
+services.AddAppSignalR();
 services.AddAppControllers();
 services.RegisterAppServices();
 
@@ -29,6 +30,7 @@ var app = builder.Build();
 app.UseAppCors();
 app.UseAppSwagger();
 app.UseAppAuth();
+app.UseAppSignalR();
 app.MapControllers();
 app.UseAppMiddleware();
 

@@ -59,6 +59,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyPlanner.Web", "Systems
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyPlanner.Services.Cache", "Services\DailyPlanner.Services.Cache\DailyPlanner.Services.Cache.csproj", "{A9AC49BC-1690-4D7D-9982-1914797C0F52}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyPlanner.Services.Notifications", "Services\DailyPlanner.Services.Notifications\DailyPlanner.Services.Notifications.csproj", "{E9BCEC34-FD69-4CE0-9864-7F6F53792E9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{A9AC49BC-1690-4D7D-9982-1914797C0F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9AC49BC-1690-4D7D-9982-1914797C0F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9AC49BC-1690-4D7D-9982-1914797C0F52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9BCEC34-FD69-4CE0-9864-7F6F53792E9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9BCEC34-FD69-4CE0-9864-7F6F53792E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9BCEC34-FD69-4CE0-9864-7F6F53792E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9BCEC34-FD69-4CE0-9864-7F6F53792E9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,6 +175,7 @@ Global
 		{0F28BD92-D9C4-4559-A571-F75C48828CEE} = {774CD5A1-E44C-449B-B5E3-39776BFC7829}
 		{FDF7514A-C63A-4FF4-87CF-17F292394544} = {0F28BD92-D9C4-4559-A571-F75C48828CEE}
 		{A9AC49BC-1690-4D7D-9982-1914797C0F52} = {F23CA966-EE1F-496E-BABC-F645851436FD}
+		{E9BCEC34-FD69-4CE0-9864-7F6F53792E9B} = {F23CA966-EE1F-496E-BABC-F645851436FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366D6BEC-9EA8-44A4-A69E-8EA229C32EA1}

@@ -13,6 +13,7 @@ public class DailyPlannerContext : IdentityDbContext<User, UserRole, Guid>
 {
     public DbSet<Notebook> Notebooks { get; set; }
     public DbSet<TodoTask> TodoTasks { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     public DailyPlannerContext(DbContextOptions<DailyPlannerContext> options) : base(options) { }
 
@@ -50,6 +51,16 @@ public class DailyPlannerContext : IdentityDbContext<User, UserRole, Guid>
             .HasOne(task => task.User)
             .WithMany(user => user.TodoTasks)
             .HasForeignKey(task => task.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Notification>().ToTable("notifications");
+        modelBuilder.Entity<Notification>().Property(notification => notification.Title).IsRequired();
+        modelBuilder.Entity<Notification>().Property(notification => notification.Title).HasMaxLength(50);
+        modelBuilder.Entity<Notification>().Property(notification => notification.Description).HasMaxLength(200);
+        modelBuilder.Entity<Notification>()
+            .HasOne(notification => notification.User)
+            .WithMany(user => user.Notifications)
+            .HasForeignKey(notification => notification.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
