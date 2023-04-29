@@ -6,17 +6,25 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<MudGrid Justify="Justify.Center" Class="pa-10">
-    <MudItem xs="7" sm="4">
+<AuthorizeView>
+    <Authorized>
+        @{
+            NavigationManager.NavigateTo("");
+        }
+    </Authorized>
+</AuthorizeView>
+
+<MudGrid Justify="Justify.Center" Class="pa-10 ma-0" Style="width: 100%;">
+    <MudItem xs="12" sm="8" md="6" lg="4">
         <MudPaper Class="pa-4">
             <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
                 
                 <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Sign In</MudText>
 
                 <MudAlert Severity="Severity.Error" Class="@(showErrors ? "mb-3 d-block" : "d-none")">
-                    @error
+                    Authentication failed.
                     <br />
-                    @errorDetails
+                    Check your email and password. Confirm your email if you haven't already. <a href="/send-confirmation-email">Resend link.</a>
                 </MudAlert>
 
                 <MudTextField T="string"
@@ -91,17 +99,10 @@
     private async Task OnValidSubmit()
     {
         showErrors = false;
-        error = "";
-        errorDetails = "";
 
         var result = await AuthService.Login(model);
 
         if (result.IsSuccessful) NavigationManager.NavigateTo("/");
-        else
-        {
-            error = result.Error;
-            errorDetails = result.ErrorDescription;
-            showErrors = true;
-        }
+        else showErrors = true;
     }
 }
