@@ -1,0 +1,135 @@
+﻿@using DailyPlanner.Web.Pages.Notifications.Services
+@using DailyPlanner.Web.Pages.Notifications.Models
+@using DailyPlanner.Web.Providers
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Security.Claims
+
+@attribute [Authorize]
+
+@inject ISnackbar Snackbar
+@inject INotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Notifications" OnClick="@OpenDrawer"></MudFab>
+
+<MudDrawer @bind-Open="@isNotificationDrawerOpen" Anchor="Anchor.Left" Elevation="1" Variant="@DrawerVariant.Temporary" Width="400px">
+    <MudContainer Style="max-width: 100%;" Class="pa-0 mud-appbar">
+        <MudText Typo="Typo.h5" Class="my-4" Style="text-align: center;">Notifications</MudText>
+    </MudContainer>
+    
+    <MudContainer Class="px-8">
+        @if (isDataLoaded == false)
+        {
+            <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+        }
+        else if (notifications.IsNullOrEmpty())
+        {
+            <MudText Class="py-8" Align="Align.Center" Style="font-size: 28px;">No notifications yet.</MudText>
+        }
+        else
+        {
+            <MudList Class="my-4 pa-0" Style="overflow: auto;">
+                @foreach (var notification in notifications)
+                {
+                    <MudListItem Class="ma-0 pa-0">
+                        <MudCard Style="@(notification.IsMarkedAsRead ? "" : $"background: {Colors.BlueGrey.Darken4}; color: #ffffffb2;")" Outlined="true" Class="ma-0 pa-0">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudText Typo="Typo.h6">@notification.Title</MudText>
+                                    <MudText Typo="Typo.body2">@($"{notification.SendingTime:MMM d, yyyy, h:mm tt}")</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText>@notification.Description</MudText>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    @if (notification.IsMarkedAsRead == false)
+                                {
+                                    <MudButton Variant="Variant.Text" Color="Color.Info" OnClick="@(_ => MarkAsRead(notification.Id))">Mark as read</MudButton>
+                                }
+                                <MudButton Variant="Variant.Text" Color="Color.Info" OnClick="@(_ => DeleteNotification(notification.Id))">Delete</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudListItem>
+                }
+            </MudList>
+
+            <MudContainer Style="max-width: 100%;" Class="mb-16 px-0">
+                <MudButton FullWidth="true" Color="Color.Info" Variant="Variant.Filled" OnClick="@(_ => MarkAllAsRead())">Mark all as read</MudButton>
+                <MudButton FullWidth="true" Color="Color.Error" Variant="Variant.Filled" Class="mt-2" OnClick="@(_ => DeleteAllNotifications())">Delete all</MudButton>
+            </MudContainer>
+        }
+    </MudContainer>
+</MudDrawer>
+
+@code {
+    private IEnumerable<Notification> notifications = new List<Notification>();
+    private bool isDataLoaded;
+    private bool isNotificationDrawerOpen;
+
+    private async Task ReloadData()
+    {
+        notifications = await NotificationService.GetNotifications();
+        notifications = notifications.OrderByDescending(notification => notification.SendingTime);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+            isDataLoaded = true;
+            await StartNotifications();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task StartNotifications()
+    {
+        var authenticationState = await ((ApiAuthenticationStateProvider)AuthenticationStateProvider).GetAuthenticationStateAsync();
+        var hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"http://localhost:10000/notificationHub?user-id={authenticationState.User.FindFirst(claim => claim.Type == "sub")?.Value}"))
+            .Build();
+
+        hubConnection.On<string>("ReceiveNotification", message =>
+        {
+            Snackbar.Add(message);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task OpenDrawer()
+    {
+        await ReloadData();
+        isNotificationDrawerOpen = true;
+    }
+
+    private async Task MarkAsRead(int notificationId)
+    {
+        await NotificationService.MarkAsRead(notificationId);
+        await ReloadData();
+    }
+
+    private async Task MarkAllAsRead()
+    {
+        await NotificationService.MarkAllAsRead();
+        await ReloadData();
+    }
+
+    private async Task DeleteNotification(int notificationId)
+    {
+        await NotificationService.DeleteNotification(notificationId);
+        await ReloadData();
+    }
+
+    private async Task DeleteAllNotifications()
+    {
+        await NotificationService.DeleteAllNotifications();
+        await ReloadData();
+    }
+}
