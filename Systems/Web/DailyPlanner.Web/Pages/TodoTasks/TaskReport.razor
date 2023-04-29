@@ -2,6 +2,8 @@
 @using DailyPlanner.Web.Pages.TodoTasks.Models
 @using DailyPlanner.Web.Pages.TodoTasks.Services
 
+@attribute [Authorize]
+
 @inject ISnackbar Snackbar
 @inject ITodoTaskService TodoTaskService
 
@@ -11,7 +13,7 @@
             @if (lastWeekData.Sum() > 0)
             {
                 <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom" Width="300px" Height="300px"
-                          InputData="@lastWeekData" InputLabels="@labels">
+                      InputData="@lastWeekData" InputLabels="GetChartLabels(lastWeekData)">
                 </MudChart>
             }
             else
@@ -20,10 +22,10 @@
             }
         </MudTabPanel>
         <MudTabPanel Text="Last Month">
-            @if (lastWeekData.Sum() > 0)
+            @if (lastMonthData.Sum() > 0)
             {
                 <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom" Width="300px" Height="300px"
-                          InputData="@lastMonthData" InputLabels="@labels">
+                      InputData="@lastMonthData" InputLabels="GetChartLabels(lastMonthData)">
                 </MudChart>
             }
             else
@@ -32,10 +34,10 @@
             }
         </MudTabPanel>
         <MudTabPanel Text="Whole Time">
-            @if (lastWeekData.Sum() > 0)
+            @if (wholeTimeData.Sum() > 0)
             {
                 <MudChart ChartType="ChartType.Donut" LegendPosition="Position.Bottom" Width="300px" Height="300px"
-                          InputData="@wholeTimeData" InputLabels="@labels">
+                      InputData="@wholeTimeData" InputLabels="GetChartLabels(wholeTimeData)">
                 </MudChart>
             }
             else
@@ -46,9 +48,12 @@
     </MudTabs>
 </MudContainer>
 
+<MudContainer Class="px-0" Style="position: fixed; left: 40px; bottom: 40px; width: fit-content; z-index: 1350;">
+    <Notifications />
+</MudContainer>
+
 @code
 {
-    private readonly string[] labels = { "Completed on time", "Time exceeded", "Canceled", "In progress" };
     private double[] lastWeekData = { 0, 0, 0, 0 };
     private double[] lastMonthData = { 0, 0, 0, 0 };
     private double[] wholeTimeData = { 0, 0, 0, 0 };
@@ -104,5 +109,16 @@
                 wholeTimeData[3]++;
             }
         }
+    }
+
+    private string[] GetChartLabels(double[] chartData)
+    {
+        return new string[] 
+        { 
+            $"({chartData[0]}) Completed on time", 
+            $"({chartData[1]}) Time exceeded",
+            $"({chartData[2]}) Canceled",
+            $"({chartData[3]}) In progress" 
+        };
     }
 }

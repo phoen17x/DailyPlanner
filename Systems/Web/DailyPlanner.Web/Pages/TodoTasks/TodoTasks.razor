@@ -1,13 +1,17 @@
 ﻿@page "/notebooks/{notebookId:int}/tasks"
 @using DailyPlanner.Web.Pages.TodoTasks.Models
 @using DailyPlanner.Web.Pages.TodoTasks.Services
-@using Microsoft.IdentityModel.Tokens
+@using DailyPlanner.Web.Pages.Notebooks.Services
 
 @layout MainLayout
+
+@attribute [Authorize]
 
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject ITodoTaskService TodoTaskService
+@inject INotebookService NotebookService
+@inject NavigationManager NavigationManager
 
 <MudContainer Fixed="true" Class="d-flex gap-10 px-10" Style="min-height: 100%;">
     <MudPaper Style="width: 200px;" Class="px-2 pb-2 align-self-start">
@@ -87,6 +91,10 @@
     </MudContainer>
 </MudContainer>
 
+<MudContainer Class="px-0" Style="position: fixed; left: 40px; bottom: 40px; width: fit-content; z-index: 1350;">
+    <Notifications />
+</MudContainer>
+
 @code
 {
     [Parameter]
@@ -102,6 +110,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        try { await NotebookService.GetNotebook(NotebookId); }
+        catch {NavigationManager.NavigateTo("");}
+
         try
         {
             await ReloadData();

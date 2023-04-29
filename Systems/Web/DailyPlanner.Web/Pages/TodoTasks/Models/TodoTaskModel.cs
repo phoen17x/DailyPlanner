@@ -9,6 +9,8 @@ public class TodoTaskModel
     public string Description { get; set; } = string.Empty;
     public DateTime StartTime { get; set; }
     public DateTime EstimatedCompletionTime { get; set; }
+    public DateTime? NullableStartTime { get; set; } = DateTime.Now; // for form validation
+    public DateTime? NullableEstimatedCompletionTime { get; set; } = DateTime.Now.AddHours(1); // for form validation
     public DateTime ActualCompletionTime { get; set; }
     public TodoTaskStatus Status { get; set; }
     public int NotebookId { get; set; }
@@ -21,7 +23,9 @@ public class TodoTaskModel
         Title = todotask.Title;
         Description = todotask.Description;
         StartTime = todotask.StartTime;
+        NullableStartTime = todotask.StartTime;
         EstimatedCompletionTime = todotask.EstimatedCompletionTime;
+        NullableEstimatedCompletionTime = todotask.EstimatedCompletionTime;
         ActualCompletionTime = todotask.ActualCompletionTime;
         Status = todotask.Status;
         NotebookId = todotask.NotebookId;
@@ -43,7 +47,15 @@ public class TodoTaskModelValidator : AbstractValidator<TodoTaskModel>
             .NotEmpty().WithMessage("Start time is required.");
 
         RuleFor(model => model.EstimatedCompletionTime)
-            .NotEmpty().WithMessage("Estimated completion time is required.");
+            .NotEmpty().WithMessage("Estimated completion time is required.")
+            .GreaterThan(model => model.StartTime).WithMessage("Estimated completion time should be greater than start time.");
+
+        RuleFor(model => model.NullableStartTime!.Value)
+            .NotEmpty().WithMessage("Start time is required.");
+
+        RuleFor(model => model.NullableEstimatedCompletionTime!.Value)
+            .NotEmpty().WithMessage("Estimated completion time is required.")
+            .GreaterThan(model => model.NullableStartTime!.Value).WithMessage("Estimated completion time should be greater than start time.");
 
         RuleFor(model => model.NotebookId)
             .NotEmpty().WithMessage("Notebook is required.");

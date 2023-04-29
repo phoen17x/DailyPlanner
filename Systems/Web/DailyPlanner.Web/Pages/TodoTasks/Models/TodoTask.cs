@@ -13,13 +13,15 @@ public class TodoTask
 
     public string StartTimeToString()
     {
+        var startWord = StartTime > DateTime.Now ? "Starts" : "Started";
+
         if (DateTime.Today.ToShortDateString() == StartTime.ToShortDateString())
-            return $"Starts today at {StartTime:HH:mm}";
+            return $"{startWord} today at {StartTime:h:mm tt}";
 
         if (DateTime.Today.AddDays(1).ToShortDateString() == StartTime.ToShortDateString())
-            return $"Starts tomorrow at {StartTime:HH:mm}";
+            return $"{startWord} tomorrow at {StartTime:h:mm tt}";
 
-        return $"Starts {StartTime.ToString("MMMM d, yyyy")} at {StartTime:HH:mm}";
+        return $"{startWord} {StartTime.ToString("MMMM d, yyyy")} at {StartTime:h:mm tt}";
     }
 
     public string DateTimeToString()
@@ -31,7 +33,6 @@ public class TodoTask
 public enum TodoTaskStatus
 {
     Scheduled,
-    Pending,
     Completed,
     Canceled
 }

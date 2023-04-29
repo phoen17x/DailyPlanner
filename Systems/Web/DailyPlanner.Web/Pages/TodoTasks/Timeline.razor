@@ -1,7 +1,8 @@
 ﻿@page "/timeline"
 @using DailyPlanner.Web.Pages.TodoTasks.Services
 @using DailyPlanner.Web.Pages.TodoTasks.Models
-@using Microsoft.IdentityModel.Tokens
+
+@attribute [Authorize]
 
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
@@ -11,7 +12,6 @@
     <MudContainer Class="mb-8" Style="max-width: 320px;">
         <MudDateRangePicker @ref="picker" Label="Date Range" @bind-DateRange="dateRange" AutoClose="true" DateFormat="dd.MM.yyyy" PickerVariant="PickerVariant.Dialog">
             <PickerActions>
-                <MudButton Class="mr-auto align-self-start" OnClick="@(() => picker.Clear())">Clear</MudButton>
                 <MudButton OnClick="@(() => picker.Close(false))">Cancel</MudButton>
                 <MudButton Color="Color.Primary" OnClick="@(() => picker.Close())">Okay</MudButton>
             </PickerActions>
@@ -81,6 +81,10 @@
     }
 </MudContainer>
 
+<MudContainer Class="px-0" Style="position: fixed; left: 40px; bottom: 40px; width: fit-content; z-index: 1350;">
+    <Notifications />
+</MudContainer>
+
 @code {
     private IEnumerable<TodoTask> todoTasks = new List<TodoTask>();
     private bool isDataLoaded;
@@ -119,7 +123,7 @@
 
     private bool IsInRange(DateTime dateTime)
     {
-        return dateTime >= dateRange.Start && dateTime <= dateRange.End;
+        return dateTime >= dateRange.Start && dateTime < dateRange.End.Value.AddDays(1);
     }
 
     private async Task EditTodoTask(int todoTaskId)

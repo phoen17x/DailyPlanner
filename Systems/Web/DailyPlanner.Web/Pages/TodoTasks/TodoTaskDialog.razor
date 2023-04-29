@@ -16,35 +16,33 @@
                 </MudItem>
                 <MudItem xs="6">
                     <MudTextField Label="Description" @bind-Value="Model.Description"
-                                  For="@(() => Model.Description)"
-                                  Required="true"
-                                  RequiredError="Description is required!" />
+                                  For="@(() => Model.Description)" />
                 </MudItem>
                 <MudItem xs="6">
-                    <MudDatePicker Label="Start time" @bind-Date="startDate"
+                    <MudDatePicker Label="Start time" @bind-Date="Model.NullableStartTime"
                                    DateFormat="dd.MM.yyyy"
-                                   For="@(() => startDate)"
+                                   For="@(() => Model.NullableStartTime)"
                                    Required="true"
                                    RequiredError="Date is required!" />
                 </MudItem>
                 <MudItem xs="6">
-                    <MudTimePicker @bind-Time="startTime"
+                    <MudTimePicker @bind-Time="StartTime"
                                    AmPm="true"
-                                   For="@(() => startTime)"
+                                   For="@(() => StartTime)"
                                    Required="true"
                                    RequiredError="Time is required!" />
                 </MudItem>
                 <MudItem xs="6">
-                    <MudDatePicker Label="Estimated complition time" @bind-Date="estimatedCompletionDate"
+                    <MudDatePicker Label="Estimated complition time" @bind-Date="Model.NullableEstimatedCompletionTime"
                                    DateFormat="dd.MM.yyyy"
-                                   For="@(() => estimatedCompletionDate)"
+                                   For="@(() => Model.NullableEstimatedCompletionTime)"
                                    Required="true"
                                    RequiredError="Date is required!" />
                 </MudItem>
                 <MudItem xs="6">
-                    <MudTimePicker @bind-Time="estimatedCompletionTime"
+                    <MudTimePicker @bind-Time="EstimatedCompletionTime"
                                    AmPm="true"
-                                   For="@(() => estimatedCompletionTime)"
+                                   For="@(() => EstimatedCompletionTime)"
                                    Required="true"
                                    RequiredError="Time is required!" />
                 </MudItem>
@@ -61,7 +59,7 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     MudForm form = new();
-    TodoTaskModelValidator modelValidator = new();
+    readonly TodoTaskModelValidator modelValidator = new();
 
     private bool isNew;
 
@@ -71,10 +69,17 @@
     [Parameter]
     public TodoTaskModel Model { get; set; } = new();
 
-    DateTime? startDate;
-    DateTime? estimatedCompletionDate;
-    TimeSpan? startTime;
-    TimeSpan? estimatedCompletionTime;
+    TimeSpan? StartTime
+    {
+        get => Model.NullableStartTime!.Value.TimeOfDay;
+        set => Model.NullableStartTime = Model.NullableStartTime!.Value.Date + value!.Value;
+    }
+
+    TimeSpan? EstimatedCompletionTime
+    {
+        get => Model.NullableEstimatedCompletionTime!.Value.TimeOfDay;
+        set => Model.NullableEstimatedCompletionTime = Model.NullableEstimatedCompletionTime!.Value.Date + value!.Value;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,16 +87,7 @@
         if (isNew == false)
         {
             var todoTask = await TodoTaskService.GetTodoTask(TodoTaskId ?? 0);
-            Model.Id = todoTask.Id;
-            Model.Title = todoTask.Title;
-            Model.Description = todoTask.Description;
-            startDate = todoTask.StartTime.Date;
-            startTime = todoTask.StartTime.TimeOfDay;
-            estimatedCompletionDate = todoTask.EstimatedCompletionTime.Date;
-            estimatedCompletionTime = todoTask.EstimatedCompletionTime.TimeOfDay;
-            Model.ActualCompletionTime = todoTask.ActualCompletionTime;
-            Model.Status = todoTask.Status;
-            Model.NotebookId = todoTask.NotebookId;
+            Model = new TodoTaskModel(todoTask);
         }
 
         form.ResetValidation();
@@ -102,8 +98,8 @@
         await form.Validate();
         if (form.IsValid)
         {
-            Model.StartTime = startDate.Value + startTime.Value;
-            Model.EstimatedCompletionTime = estimatedCompletionDate.Value + estimatedCompletionTime.Value;
+            Model.StartTime = Model.NullableStartTime!.Value;
+            Model.EstimatedCompletionTime = Model.NullableEstimatedCompletionTime!.Value;
             MudDialog.Close(DialogResult.Ok(true));
         }
     }
