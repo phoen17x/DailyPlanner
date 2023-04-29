@@ -6,8 +6,16 @@
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 
-<MudGrid Justify="Justify.Center" Class="pa-10">
-    <MudItem xs="7" sm="4">
+<AuthorizeView>
+    <Authorized>
+        @{
+            NavigationManager.NavigateTo("");
+        }
+    </Authorized>
+</AuthorizeView>
+
+<MudGrid Justify="Justify.Center" Class="pa-10 ma-0" Style="width: 100%;">
+    <MudItem xs="12" sm="8" md="6" lg="4">
         <MudPaper Class="pa-4">
             <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
                 
@@ -61,9 +69,6 @@
 </MudGrid>
 
 @code {
-    bool success;
-    MudForm form;
-
     private SignUpModel model = new();
 
     private bool passwordVisibility;
@@ -72,6 +77,11 @@
 
     private List<string> errors = new();
     private bool showErrors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model.FrontendUrl = NavigationManager.BaseUri + "confirm-email?token={0}&email={1}";
+    }
 
     void TogglePasswordVisibility()
     {

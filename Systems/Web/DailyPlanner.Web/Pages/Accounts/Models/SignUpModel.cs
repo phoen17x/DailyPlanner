@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DailyPlanner.Web.Pages.Accounts.Models;
 
@@ -18,4 +17,7 @@ public class SignUpModel
     [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
     [MaxLength(50, ErrorMessage = "Password can not be more than 50 characters long.")]
     public string Password { get; set; }
+
+    [Required(ErrorMessage = "Url is required.")]
+    public string FrontendUrl { get; set; }
 }
