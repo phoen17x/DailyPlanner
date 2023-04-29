@@ -9,5 +9,5 @@ public interface IEmailSender
     /// </summary>
     /// <param name="email">The email to send.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task Send(EmailModel email);
+    Task SendEmailAsync(EmailModel email);
 }

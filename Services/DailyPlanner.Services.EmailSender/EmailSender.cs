@@ -1,5 +1,8 @@
 ﻿using DailyPlanner.Services.EmailSender.Models;
 using Microsoft.Extensions.Logging;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace DailyPlanner.Services.EmailSender;
 
@@ -8,22 +11,31 @@ namespace DailyPlanner.Services.EmailSender;
 /// </summary>
 public class EmailSender : IEmailSender
 {
-    /// <summary>
-    /// The logger used to log email sending events.
-    /// </summary>
-    private ILogger<EmailSender> Logger { get; }
+    private readonly EmailSenderSettings settings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailSender"/> class.
     /// </summary>
-    /// <param name="logger">The logger to use for logging email sending events.</param>
-    public EmailSender(ILogger<EmailSender> logger)
+    /// <param name="settings">The RabbitMQ settings to use for the connection.</param>
+    public EmailSender(EmailSenderSettings settings)
     {
-        Logger = logger;
+        this.settings = settings;
     }
-    public async Task Send(EmailModel model)
+
+    public async Task SendEmailAsync(EmailModel model)
     {
-        await Task.Delay(2000);
-        Logger.LogDebug($"Email was sent: {model.Email} {model.Subject} {model.Message}");
+        var email = new MimeMessage();
+        email.Sender = MailboxAddress.Parse(settings.Email);
+        email.To.Add(MailboxAddress.Parse(model.Email));
+        email.Subject = model.Subject;
+
+        var builder = new BodyBuilder { HtmlBody = model.Message };
+        email.Body = builder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(settings.Host, settings.Port, SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(settings.Email, settings.Password);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
     }
 }

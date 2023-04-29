@@ -278,6 +278,58 @@
             <param name="notebookId">The id of the notebook to delete.</param>
             <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> indicating success or failure.</returns>
         </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse">
+            <summary>
+            Represents a response object for a notification.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse.Id">
+            <summary>
+            Gets or sets the id of the notification.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse.Title">
+            <summary>
+            Gets or sets the title of the notification.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse.Description">
+            <summary>
+            Gets or sets the description of the notification.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse.SendingTime">
+            <summary>
+            Gets or sets the sending time of the notification in string format.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse.IsMarkedAsRead">
+            <summary>
+            True if notification is marked as read, otherwise false.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponseProfile">
+            <summary>
+            Maps <see cref="T:DailyPlanner.Services.Notifications.Models.NotificationModel"/> to <see cref="T:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponse"/>.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponseProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notifications.Models.NotificationResponseProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:DailyPlanner.Api.Controllers.Notifications.NotificationController">
+            <summary>
+            API endpoints for managing notifications.
+            </summary>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.Notifications.NotificationController.#ctor(AutoMapper.IMapper,DailyPlanner.Services.Notifications.INotificationService)">
+            <summary>
+            Creates a new instance of the <see cref="T:DailyPlanner.Api.Controllers.Notifications.NotificationController"/> class.
+            </summary>
+            <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
+            <param name="notificationService">The <see cref="T:DailyPlanner.Services.Notifications.INotificationService"/> instance used for notification operations.</param>
+        </member>
         <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest">
             <summary>
             Represents a request object for a new todotask.
@@ -413,9 +465,19 @@
             Gets or sets the estimated completion time of the todotask in string format.
             </summary>
         </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.ActualCompletionTime">
+            <summary>
+            Gets or sets the actual completion time of the todotask in string format.
+            </summary>
+        </member>
         <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.Status">
             <summary>
             Gets or sets the status of the todotask.
+            </summary>
+        </member>
+        <member name="P:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequest.NotebookId">
+            <summary>
+            Gets or sets the id of the notebook to which the todotask belongs.
             </summary>
         </member>
         <member name="T:DailyPlanner.Api.Controllers.TodoTasks.Models.UpdateTodoTaskRequestValidator">
@@ -450,12 +512,25 @@
             <param name="mapper">The <see cref="T:AutoMapper.IMapper"/> instance used for mapping.</param>
             <param name="todoTaskService">The <see cref="T:DailyPlanner.Services.TodoTasks.ITodoTaskService"/> instance used for task operations.</param>
         </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.GetTodoTasks">
+            <summary>
+            Gets a list of todotasks.
+            </summary>
+            <returns>A collection of <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse"/> objects.</returns>
+        </member>
         <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.GetTodoTasks(System.Int32)">
             <summary>
             Gets a list of todotasks.
             </summary>
             <param name="notebookId">ID of the notebook to get todotasks from.</param>
             <returns>A collection of <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse"/> objects.</returns>
+        </member>
+        <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.GetNotebook(System.Int32)">
+            <summary>
+            Gets a single todotask by id.
+            </summary>
+            <param name="todoTaskId">The id of the todotask to get.</param>
+            <returns>A <see cref="T:DailyPlanner.Api.Controllers.TodoTasks.Models.TodoTaskResponse"/> object.</returns>
         </member>
         <member name="M:DailyPlanner.Api.Controllers.TodoTasks.TodoTaskController.AddTodoTask(DailyPlanner.Api.Controllers.TodoTasks.Models.AddTodoTaskRequest)">
             <summary>

@@ -58,7 +58,7 @@ public class TaskExecutor : ITaskExecutor
             RabbitMqQueueNames.SEND_EMAIL, 
             async data => await Execute<IEmailSender>(async service => {
                 logger.LogDebug($"RabbitMQ: {RabbitMqQueueNames.SEND_EMAIL}: {data.Email} {data.Message}");
-                await service.Send(data);
+                await service.SendEmailAsync(data);
             }));
     }
 }

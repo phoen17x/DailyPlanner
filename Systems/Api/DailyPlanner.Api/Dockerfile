@@ -11,14 +11,16 @@ COPY ["Data/DailyPlanner.Context/DailyPlanner.Context.csproj", "Data/DailyPlanne
 COPY ["Shared/DailyPlanner.Settings/DailyPlanner.Settings.csproj", "Shared/DailyPlanner.Settings/"]
 COPY ["Data/DailyPlanner.Context.Entities/DailyPlanner.Context.Entities.csproj", "Data/DailyPlanner.Context.Entities/"]
 COPY ["Data/Migrations/DailyPlanner.Context.MigrationsPostgreSQL/DailyPlanner.Context.MigrationsPostgreSQL.csproj", "Data/Migrations/DailyPlanner.Context.MigrationsPostgreSQL/"]
-COPY ["Services/DailyPlanner.Services.Notebooks/DailyPlanner.Services.Notebooks.csproj", "Services/DailyPlanner.Services.Notebooks/"]
+COPY ["Services/DailyPlanner.Services.Actions/DailyPlanner.Services.Actions.csproj", "Services/DailyPlanner.Services.Actions/"]
 COPY ["Shared/DailyPlanner.Common/DailyPlanner.Common.csproj", "Shared/DailyPlanner.Common/"]
+COPY ["Services/DailyPlanner.Services.EmailSender/DailyPlanner.Services.EmailSender.csproj", "Services/DailyPlanner.Services.EmailSender/"]
 COPY ["Services/DailyPlanner.Services.RabbitMq/DailyPlanner.Services.RabbitMq.csproj", "Services/DailyPlanner.Services.RabbitMq/"]
 COPY ["Services/DailyPlanner.Services.Settings/DailyPlanner.Services.Settings.csproj", "Services/DailyPlanner.Services.Settings/"]
+COPY ["Services/DailyPlanner.Services.Cache/DailyPlanner.Services.Cache.csproj", "Services/DailyPlanner.Services.Cache/"]
+COPY ["Services/DailyPlanner.Services.Notebooks/DailyPlanner.Services.Notebooks.csproj", "Services/DailyPlanner.Services.Notebooks/"]
+COPY ["Services/DailyPlanner.Services.Notifications/DailyPlanner.Services.Notifications.csproj", "Services/DailyPlanner.Services.Notifications/"]
 COPY ["Services/DailyPlanner.Services.TodoTasks/DailyPlanner.Services.TodoTasks.csproj", "Services/DailyPlanner.Services.TodoTasks/"]
 COPY ["Services/DailyPlanner.Services.UserAccount/DailyPlanner.Services.UserAccount.csproj", "Services/DailyPlanner.Services.UserAccount/"]
-COPY ["Services/DailyPlanner.Services.Actions/DailyPlanner.Services.Actions.csproj", "Services/DailyPlanner.Services.Actions/"]
-COPY ["Services/DailyPlanner.Services.EmailSender/DailyPlanner.Services.EmailSender.csproj", "Services/DailyPlanner.Services.EmailSender/"]
 RUN dotnet restore "Systems/Api/DailyPlanner.Api/DailyPlanner.Api.csproj"
 COPY . .
 WORKDIR "/src/Systems/Api/DailyPlanner.Api"
