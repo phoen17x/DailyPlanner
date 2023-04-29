@@ -53,6 +53,12 @@ services:
     env_file:
       - env.worker
 
+  dailyplanner_web:
+    ports:
+      - "10002:80"
+    networks:
+      - shared_daily_planner
+
 networks:
   shared_daily_planner:
     name: daily_planner

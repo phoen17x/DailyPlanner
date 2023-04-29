@@ -38,3 +38,14 @@ services:
       - dailyplanner_postgresql
       - dailyplanner_rabbitmq
       - dailyplanner_redis
+  
+  dailyplanner_web:
+    image: ${DOCKER_REGISTRY-}dailyplannerweb
+    build:
+      context: .
+      dockerfile: Systems/Web/DailyPlanner.Web/Dockerfile
+    depends_on:
+      - dailyplanner_api
+      - dailyplanner_postgresql
+      - dailyplanner_rabbitmq
+      - dailyplanner_redis
