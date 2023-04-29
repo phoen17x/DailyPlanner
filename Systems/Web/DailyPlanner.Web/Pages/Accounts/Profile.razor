@@ -1,0 +1,66 @@
+﻿@page "/profile"
+@using DailyPlanner.Web.Pages.Accounts.Models
+@using DailyPlanner.Web.Pages.Accounts.Services
+@layout MainLayout
+
+@inject ISnackbar Snackbar
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+<MudGrid Justify="Justify.Center" Class="pa-10 ma-0" Style="width: 100%;">
+    
+        @if (isDataLoaded == false)
+        {
+            <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+        }
+        else
+        {
+            <MudItem xs="12" sm="8" md="6" lg="4" Class="d-flex align-center flex-column">
+                <MudSimpleTable Style="overflow-x: auto; width: 600px;">
+                    <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>@user.Name</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>@user.Email</td>
+                    </tr>
+                    </tbody>
+                </MudSimpleTable>
+                <MudButton Variant="Variant.Filled" Color="Color.Info" Class="mt-8" OnClick="ChangePassword">Change password</MudButton>
+            </MudItem>
+        }
+</MudGrid>
+
+@code 
+{
+    private UserModel user = new UserModel();
+    private bool isDataLoaded;
+
+    private async Task ReloadData()
+    {
+        user = await AccountService.GetUserData();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ReloadData();
+            isDataLoaded = true;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async void ChangePassword()
+    {
+        var token = await AccountService.GetPasswordRecoveryToken();
+        NavigationManager.NavigateTo($"/change-password?token={token}&email={user.Email}");
+    }
+}
