@@ -1,7 +1,5 @@
 ﻿@page "/"
 
-@using Microsoft.AspNetCore.Components.Authorization
-
 @layout MainLayout
 
 @inject NavigationManager NavigationManager
@@ -11,8 +9,16 @@
         @{ NavigationManager.NavigateTo("/notebooks"); }
     </Authorized>
     <NotAuthorized>
-        <MudTHeadRow>
-            <MudText Typo="Typo.h4" Class="ma-4">Dashboard</MudText><br />
-        </MudTHeadRow>
+        <MudContainer Class="d-flex align-center flex-column">
+            <MudText Class="my-10" Style="font-size: 100px">Daily Planner</MudText>
+            <MudContainer Class="d-flex justify-center">
+                <MudButton Href="/login" Variant="Variant.Filled" Color="Color.Success" Class="mr-2">
+                    Sign in
+                </MudButton>
+                <MudButton Href="/signup" Variant="Variant.Filled" Color="Color.Info" Class="ml-2">
+                    Create an account
+                </MudButton>
+            </MudContainer>
+        </MudContainer>
     </NotAuthorized>
 </AuthorizeView>
