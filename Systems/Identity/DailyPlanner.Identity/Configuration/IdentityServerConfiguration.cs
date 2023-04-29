@@ -25,6 +25,7 @@ public static class IdentityServerConfiguration
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = true;
+                options.SignIn.RequireConfirmedEmail = true;
             })
             .AddEntityFrameworkStores<DailyPlannerContext>()
             .AddUserManager<UserManager<User>>()
