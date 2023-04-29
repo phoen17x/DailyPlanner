@@ -44,12 +44,10 @@ public class NotebookController : ControllerBase
     [HttpGet]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IEnumerable<NotebookResponse>), 200)]
-    public async Task<IEnumerable<NotebookResponse>> GetNotebooks(
-        [FromQuery] int offset = 0,
-        [FromQuery] int limit = 10)
+    public async Task<IEnumerable<NotebookResponse>> GetNotebooks()
     {
         var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var notebooks = await notebookService.GetNotebooks(userId, offset, limit);
+        var notebooks = await notebookService.GetNotebooks(userId);
         return mapper.Map<IEnumerable<NotebookResponse>>(notebooks);
     }
 

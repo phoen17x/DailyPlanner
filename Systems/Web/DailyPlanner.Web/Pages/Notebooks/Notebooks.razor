@@ -1,7 +1,6 @@
 ﻿@page "/notebooks"
 @using DailyPlanner.Web.Pages.Notebooks.Services
 @using DailyPlanner.Web.Pages.Notebooks.Models
-@using Microsoft.IdentityModel.Tokens
 
 @layout MainLayout
 
@@ -57,6 +56,10 @@
     </MudContainer>
 </MudContainer>
 
+<MudContainer Class="px-0" Style="position: fixed; left: 40px; bottom: 40px; width: fit-content; z-index: 1350;">
+    <Notifications />
+</MudContainer>
+
 
 @code {
     private IEnumerable<Notebook> notebooks = new List<Notebook>();
@@ -64,7 +67,7 @@
 
     private async Task ReloadData()
     {
-        notebooks = await NotebookService.GetNotebooks(0, 100);
+        notebooks = await NotebookService.GetNotebooks();
         notebooks = notebooks.OrderBy(notebook => notebook.Id);
     }
 

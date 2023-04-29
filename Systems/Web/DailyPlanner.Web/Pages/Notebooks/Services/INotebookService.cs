@@ -4,7 +4,7 @@ namespace DailyPlanner.Web.Pages.Notebooks.Services;
 
 public interface INotebookService
 {
-    Task<IEnumerable<Notebook>> GetNotebooks(int offset = 0, int limit = 10);
+    Task<IEnumerable<Notebook>> GetNotebooks();
     Task<Notebook> GetNotebook(int notebookId);
     Task AddNotebook(NotebookModel model);
     Task EditNotebook(int notebookId, NotebookModel model);

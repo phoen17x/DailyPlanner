@@ -13,9 +13,9 @@ public class NotebookService : INotebookService
         this.httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<Notebook>> GetNotebooks(int offset = 0, int limit = 10)
+    public async Task<IEnumerable<Notebook>> GetNotebooks()
     {
-        var url = $"{Settings.ApiRoot}/v1/notebooks?offset={offset}&limit={limit}";
+        var url = $"{Settings.ApiRoot}/v1/notebooks";
 
         var response = await httpClient.GetAsync(url);
         var content = await response.Content.ReadAsStringAsync();

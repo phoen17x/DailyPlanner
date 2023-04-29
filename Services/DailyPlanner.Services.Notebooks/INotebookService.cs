@@ -8,10 +8,8 @@ public interface INotebookService
     /// Gets a collection of notebooks with optional offset and limit.
     /// </summary>
     /// <param name="userId">User identifier.</param>
-    /// <param name="offset">Number of items to skip from the start of the collection.</param>
-    /// <param name="limit">Maximum number of items to return in the collection.</param>
     /// <returns>Collection of <see cref="NotebookModel"/> objects.</returns>
-    Task<IEnumerable<NotebookModel>> GetNotebooks(Guid userId, int offset = 0, int limit = 10);
+    Task<IEnumerable<NotebookModel>> GetNotebooks(Guid userId);
 
     /// <summary>
     /// Gets a single notebook by ID.

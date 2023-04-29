@@ -43,18 +43,14 @@ public class NotebookService : INotebookService
     }
     
 
-    public async Task<IEnumerable<NotebookModel>> GetNotebooks(Guid userId, int offset = 0, int limit = 10)
+    public async Task<IEnumerable<NotebookModel>> GetNotebooks(Guid userId)
     {
         var cacheKey = $"dailyplanner:notebooks-{userId}";
         var cachedData = await cacheService.Get<IEnumerable<NotebookModel>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
         await using var context = await contextFactory.CreateDbContextAsync();
-        var notebooks = context.Notebooks.AsQueryable();
-        notebooks = notebooks
-            .Where(notebook => notebook.UserId == userId)
-            .Skip(Math.Max(offset, 0))
-            .Take(Math.Max(0, Math.Min(limit, 1000)));
+        var notebooks = context.Notebooks.Where(notebook => notebook.UserId == userId);
 
         var data = (await notebooks.ToListAsync()).Select(mapper.Map<NotebookModel>);
         await cacheService.Put(cacheKey, data);
