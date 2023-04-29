@@ -1,0 +1,86 @@
+﻿@page "/send-confirmation-email"
+@using DailyPlanner.Web.Pages.Accounts.Services
+@using DailyPlanner.Web.Pages.Accounts.Models
+@layout MainLayout
+
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        @{
+            NavigationManager.NavigateTo("");
+        }
+    </Authorized>
+</AuthorizeView>
+
+<MudGrid Justify="Justify.Center" Class="pa-10 ma-0" Style="width: 100%;">
+    <MudItem xs="7" sm="4">
+        <MudPaper Class="pa-4">
+            @if (isConfirmationLinkSent)
+            {
+                <MudText Align="Align.Center" Class="my-3">Link is sent. Check your email.</MudText>
+            }
+            else
+            {
+                <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+
+                    <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-3">Send to</MudText>
+
+                    <MudAlert Severity="Severity.Error" Class="@(showErrors ? "m-3 d-block" : "d-none")">
+                        @foreach (var error in errors)
+                        {
+                            <p style="font-size: 1rem;">@error</p>
+                        }
+                    </MudAlert>
+
+                    <MudTextField T="string"
+                              @bind-Value="model.Email" For="@(() => model.Email)"
+                              Label="Email"
+                              Required="true"
+                              RequiredError="Email is required!"
+                              HelperText="Enter your email"
+                              Validation="@(new EmailAddressAttribute {ErrorMessage = "The email is not valid"})" />
+
+                    <MudList DisableGutters="true" Dense="true">
+                        <MudListItem>
+                            <MudLink Href="/login">Log In?</MudLink>
+                        </MudListItem>
+                    </MudList>
+
+                    <div Class="d-flex justify-end">
+                        <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               ButtonType="ButtonType.Submit">Submit</MudButton>
+                    </div>
+                </EditForm>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private readonly SendEmailWithLinkModel model = new();
+    private List<string> errors = new();
+    private bool showErrors;
+    private bool isConfirmationLinkSent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model.FrontendUrl = NavigationManager.BaseUri + "confirm-email?token={0}&email={1}";
+    }
+
+    private async Task OnValidSubmit()
+    {
+        showErrors = false;
+        var result = await AccountService.SendConfirmationEmail(model);
+
+        if (result.IsSuccessful) isConfirmationLinkSent = true;
+        else
+        {
+            errors = result.Errors.Select(error => error.Message).ToList();
+            showErrors = true;
+        }
+    }
+}

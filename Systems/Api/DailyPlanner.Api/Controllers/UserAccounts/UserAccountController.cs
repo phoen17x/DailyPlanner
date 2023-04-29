@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using DailyPlanner.Api.Controllers.UserAccounts.Models;
 using DailyPlanner.Common.Responses;
+using DailyPlanner.Common.Security;
 using DailyPlanner.Services.UserAccount;
 using DailyPlanner.Services.UserAccount.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace DailyPlanner.Api.Controllers.Accounts;
 
@@ -43,5 +46,56 @@ public class UserAccountController : ControllerBase
         var user = await userAccountService.AddUserAccount(mapper.Map<RegisterUserAccountModel>(request));
         var response = mapper.Map<UserAccountResponse>(user);
         return response;
+    }
+
+    [HttpPost("confirm-email")]
+    [ProducesResponseType(typeof(IActionResult), 200)]
+    public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request)
+    {
+        await userAccountService.ConfirmEmail(request.Token, request.Email);
+        return Ok();
+    }
+
+    [HttpPost("confirmation-email")]
+    [ProducesResponseType(typeof(IActionResult), 200)]
+    public async Task<IActionResult> SendEmailConfirmationLink([FromBody] SendEmailWithLinkRequest request)
+    {
+        await userAccountService.SendConfirmationLinkAsync(mapper.Map<SendEmailWithLinkModel>(request));
+        return Ok();
+    }
+
+    [HttpGet("password-recovery-token")]
+    [Authorize(AppScopes.PlannerAccess)]
+    [ProducesResponseType(typeof(string), 200)]
+    public async Task<string> GetPasswordRecoveryToken()
+    {
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        return await userAccountService.GetPasswordRecoveryToken(userId);
+    }
+
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(typeof(IActionResult), 200)]
+    public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] SendEmailWithLinkRequest request)
+    {
+        await userAccountService.SendPasswordRecoveryLinkAsync(mapper.Map<SendEmailWithLinkModel>(request));
+        return Ok();
+    }
+
+    [HttpPost("change-password")]
+    [ProducesResponseType(typeof(IActionResult), 200)]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        await userAccountService.ChangePassword(mapper.Map<ChangePasswordModel>(request));
+        return Ok();
+    }
+
+    [HttpGet("user")]
+    [Authorize(AppScopes.PlannerAccess)]
+    [ProducesResponseType(typeof(UserAccountResponse), 200)]
+    public async Task<UserAccountResponse> GetUserData()
+    {
+        var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var user = await userAccountService.GetUserData(userId);
+        return mapper.Map<UserAccountResponse>(user);
     }
 }

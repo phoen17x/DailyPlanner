@@ -1,0 +1,58 @@
+﻿@page "/confirm-email"
+@using DailyPlanner.Web.Pages.Accounts.Models
+@using DailyPlanner.Web.Pages.Accounts.Services
+@using Microsoft.Extensions.Primitives
+
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+<MudGrid Justify="Justify.Center" Class="pa-10 ma-0" Style="width: 100%;">
+    <MudItem xs="7" sm="4">
+        <MudPaper Class="d-flex justify-center pa-4">
+            <MudAlert Severity="Severity.Error" Class="@(showErrors ? "my-3 d-block" : "d-none")">
+                @foreach (var error in errors)
+                {
+                    <p style="font-size: 1rem;">@error</p>
+                }
+            </MudAlert>
+            @if (isDataLoaded == false)
+            {
+                <MudProgressCircular Color="Color.Primary" Style="height: 70px; width: 70px;" Indeterminate="true"/>
+            }
+            else if (isConfirmed)
+            {
+                <MudText Align="Align.Center" Class="my-3">Email confirmed.</MudText>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code 
+{
+    private readonly ConfirmEmailModel model = new();
+    private bool isConfirmed;
+    private bool isDataLoaded;
+    private List<string> errors = new();
+    private bool showErrors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+        StringValues values;
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("token", out values))
+            model.Token = values.First()?.Replace(' ', '+') ?? "";
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("email", out values))
+            model.Email = values.First()?.Replace(' ', '+') ?? "";
+
+        var result = await AccountService.ConfirmEmail(model);
+        isDataLoaded = true;
+        if (result.IsSuccessful) isConfirmed = true;
+        else
+        {
+            errors = result.Errors.Select(error => error.Message).ToList();
+            showErrors = true;
+        }
+    }
+}

@@ -10,6 +10,7 @@ public class RegisterUserAccountModel
     public string Name { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
+    public string FrontendUrl { get; set; }
 }
 
 /// <summary>
@@ -31,5 +32,8 @@ public class RegisterUserAccountModelValidator : AbstractValidator<RegisterUserA
             .NotEmpty().WithMessage("Password is required.")
             .MaximumLength(50).WithMessage("Password is too long.")
             .MinimumLength(8).WithMessage("Password is too short.");
+
+        RuleFor(model => model.FrontendUrl)
+            .NotEmpty().WithMessage("Url is required.");
     }
 }

@@ -21,6 +21,8 @@ public class RegisterUserAccountRequest
     /// Gets or sets the user password.
     /// </summary>
     public string Password { get; set; }
+
+    public string FrontendUrl { get; set; }
 }
 
 /// <summary>
@@ -46,6 +48,9 @@ public class RegisterUserAccountRequestValidator : AbstractValidator<RegisterUse
             .NotEmpty().WithMessage("Password is required.")
             .MaximumLength(50).WithMessage("Password is too long.")
             .MinimumLength(8).WithMessage("Password is too short.");
+
+        RuleFor(model => model.FrontendUrl)
+            .NotEmpty().WithMessage("Url is required.");
     }
 }
 
