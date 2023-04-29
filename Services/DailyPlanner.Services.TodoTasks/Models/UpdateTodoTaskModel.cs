@@ -39,7 +39,8 @@ public class UpdateTodoTaskModelValidator : AbstractValidator<UpdateTodoTaskMode
             .NotEmpty().WithMessage("Start time is required.");
 
         RuleFor(model => model.EstimatedCompletionTime)
-            .NotEmpty().WithMessage("Estimated completion time is required.");
+            .NotEmpty().WithMessage("Estimated completion time is required.")
+            .GreaterThan(model => model.StartTime).WithMessage("Estimated completion time should be greater than start time");
 
         RuleFor(model => model.ActualCompletionTime)
             .NotEmpty().WithMessage("Actual completion time is required.");
