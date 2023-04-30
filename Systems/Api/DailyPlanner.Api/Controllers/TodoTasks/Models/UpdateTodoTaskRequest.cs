@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DailyPlanner.Common.Extensions;
 using DailyPlanner.Services.TodoTasks.Models;
 using FluentValidation;
+using static DailyPlanner.Common.Consts.DateTimeFormats;
 
 namespace DailyPlanner.Api.Controllers.TodoTasks.Models;
 
@@ -66,8 +68,13 @@ public class UpdateTodoTaskRequestValidator : AbstractValidator<UpdateTodoTaskRe
             .NotEmpty().WithMessage("Start time is required.");
 
         RuleFor(model => model.EstimatedCompletionTime)
-            .NotEmpty().WithMessage("Estimated completion time is required.")
-            .GreaterThan(model => model.StartTime).WithMessage("Estimated completion time should be greater than start time");
+            .NotEmpty().WithMessage("Estimated completion time is required.");
+
+        RuleFor(model => DateTime.ParseExact(model.EstimatedCompletionTime, DATE_TIME_WITHOUT_SECONDS,
+                System.Globalization.CultureInfo.InvariantCulture).SetKindUtc())
+            .GreaterThan(model => DateTime.ParseExact(model.StartTime, DATE_TIME_WITHOUT_SECONDS,
+                System.Globalization.CultureInfo.InvariantCulture).SetKindUtc())
+            .WithMessage("Estimated completion time should be greater than start time");
 
         RuleFor(model => model.ActualCompletionTime)
             .NotEmpty().WithMessage("Actual completion time is required.");
