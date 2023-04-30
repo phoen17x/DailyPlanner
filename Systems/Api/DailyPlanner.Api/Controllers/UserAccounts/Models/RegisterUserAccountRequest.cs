@@ -12,17 +12,22 @@ public class RegisterUserAccountRequest
     /// <summary>
     /// Gets or sets the name of the user.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
+
     /// <summary>
     /// Gets or sets the user email.
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
+
     /// <summary>
     /// Gets or sets the user password.
     /// </summary>
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
-    public string FrontendUrl { get; set; }
+    /// <summary>
+    /// Gets or sets the link to frontend page.
+    /// </summary>
+    public string FrontendUrl { get; set; } = string.Empty;
 }
 
 /// <summary>

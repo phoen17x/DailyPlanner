@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace DailyPlanner.Api.Controllers.Accounts;
+namespace DailyPlanner.Api.Controllers.UserAccounts;
 
 /// <summary>
 /// API endpoints for managing user accounts.
@@ -48,6 +48,11 @@ public class UserAccountController : ControllerBase
         return response;
     }
 
+    /// <summary>
+    /// Confirms the email address for a user account.
+    /// </summary>
+    /// <param name="request">The <see cref="ConfirmEmailRequest"/> object containing the confirmation details.</param>
+    /// <returns>An <see cref="IActionResult"/> object.</returns>
     [HttpPost("confirm-email")]
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailRequest request)
@@ -56,6 +61,11 @@ public class UserAccountController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Sends an email confirmation link to a user.
+    /// </summary>
+    /// <param name="request">The <see cref="SendEmailWithLinkRequest"/> object containing the email details.</param>
+    /// <returns>An <see cref="IActionResult"/> object.</returns>
     [HttpPost("confirmation-email")]
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> SendEmailConfirmationLink([FromBody] SendEmailWithLinkRequest request)
@@ -64,6 +74,10 @@ public class UserAccountController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Gets a password recovery token for a user.
+    /// </summary>
+    /// <returns>A string containing the password recovery token.</returns>
     [HttpGet("password-recovery-token")]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(string), 200)]
@@ -73,6 +87,11 @@ public class UserAccountController : ControllerBase
         return await userAccountService.GetPasswordRecoveryToken(userId);
     }
 
+    /// <summary>
+    /// Sends a password recovery link to a user.
+    /// </summary>
+    /// <param name="request">The <see cref="SendEmailWithLinkRequest"/> object containing the email details.</param>
+    /// <returns>An <see cref="IActionResult"/> object.</returns>
     [HttpPost("forgot-password")]
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> SendPasswordRecoveryLink([FromBody] SendEmailWithLinkRequest request)
@@ -81,6 +100,11 @@ public class UserAccountController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Changes the password for a user.
+    /// </summary>
+    /// <param name="request">The <see cref="ChangePasswordRequest"/> object containing the new password details.</param>
+    /// <returns>An <see cref="IActionResult"/> object.</returns>
     [HttpPost("change-password")]
     [ProducesResponseType(typeof(IActionResult), 200)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
@@ -89,6 +113,10 @@ public class UserAccountController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Gets the user data for the authenticated user.
+    /// </summary>
+    /// <returns>A <see cref="UserAccountResponse"/> object.</returns>
     [HttpGet("user")]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(UserAccountResponse), 200)]

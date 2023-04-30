@@ -36,13 +36,9 @@ public class RabbitMq : IRabbitMq, IDisposable
     private async Task RegisterListener(string queueName, EventHandler<BasicDeliverEventArgs> onReceive, int? messageLifetime = null)
     {
         Connect();
-
         AddQueue(queueName, messageLifetime);
-
         var consumer = new EventingBasicConsumer(channel);
-
         consumer.Received += onReceive;
-
         channel.BasicConsume(queueName, false, consumer);
     }
 

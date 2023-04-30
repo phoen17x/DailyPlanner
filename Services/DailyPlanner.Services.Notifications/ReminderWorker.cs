@@ -2,10 +2,17 @@
 
 namespace DailyPlanner.Services.Notifications;
 
+/// <summary>
+/// A background service that periodically adds reminders for todotasks.
+/// </summary>
 public class ReminderWorker : BackgroundService
 {
     private readonly INotificationService notificationService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ReminderWorker"/> class.
+    /// </summary>
+    /// <param name="notificationService">The notification service.</param>
     public ReminderWorker(INotificationService notificationService)
     {
         this.notificationService = notificationService;

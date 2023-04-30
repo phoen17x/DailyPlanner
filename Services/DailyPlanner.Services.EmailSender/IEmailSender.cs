@@ -2,6 +2,9 @@
 
 namespace DailyPlanner.Services.EmailSender;
 
+/// <summary>
+/// Provides an email service.
+/// </summary>
 public interface IEmailSender
 {
     /// <summary>

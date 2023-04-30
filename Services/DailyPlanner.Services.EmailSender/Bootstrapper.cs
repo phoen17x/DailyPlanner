@@ -1,5 +1,4 @@
-﻿using DailyPlanner.Settings;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DailyPlanner.Services.EmailSender;

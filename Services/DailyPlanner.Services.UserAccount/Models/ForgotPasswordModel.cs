@@ -2,12 +2,18 @@
 
 namespace DailyPlanner.Services.UserAccount.Models;
 
+/// <summary>
+/// Represents the data model used for sending an email with a link.
+/// </summary>
 public class SendEmailWithLinkModel
 {
     public string FrontendUrl { get; set; }
     public string Email { get; set; }
 }
 
+/// <summary>
+/// Validates the <see cref="SendEmailWithLinkModel"/>.
+/// </summary>
 public class SendEmailWithLinkValidator : AbstractValidator<SendEmailWithLinkModel>
 {
     public SendEmailWithLinkValidator()

@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
-using System.Security.Claims;
 
 namespace DailyPlanner.Services.Notifications;
 
+/// <summary>
+/// Represents the SignalR hub for real-time notifications.
+/// </summary>
 public class NotificationHub : Hub
 {
+    /// <summary>
+    /// The dictionary that holds the connections to the hub.
+    /// </summary>
     public static ConcurrentDictionary<string, string> Connections = new();
 
     public override async Task OnConnectedAsync()

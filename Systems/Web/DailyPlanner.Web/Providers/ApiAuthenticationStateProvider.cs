@@ -6,16 +6,25 @@ using System.Text.Json;
 
 namespace DailyPlanner.Web.Providers;
 
+/// <summary>
+/// Provides authentication state information for an API using a JWT token stored in local storage.
+/// </summary>
 public class ApiAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly HttpClient httpClient;
     private readonly ILocalStorageService localStorage;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiAuthenticationStateProvider"/> class.
+    /// </summary>
+    /// <param name="httpClient">The HTTP client used to make API requests.</param>
+    /// <param name="localStorage">The local storage service.</param>
     public ApiAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorage)
     {
         this.httpClient = httpClient;
         this.localStorage = localStorage;
     }
+
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var savedToken = await localStorage.GetItemAsync<string>("authToken");
@@ -30,6 +39,10 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(savedToken), "jwt")));
     }
 
+    /// <summary>
+    /// Marks the user with the specified email as authenticated.
+    /// </summary>
+    /// <param name="email">The email address of the authenticated user.</param>
     public void MarkUserAsAuthenticated(string email)
     {
         var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }, "apiauth"));
@@ -37,6 +50,9 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(authState);
     }
 
+    /// <summary>
+    /// Marks the current user as logged out.
+    /// </summary>
     public void MarkUserAsLoggedOut()
     {
         var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
@@ -52,32 +68,25 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         try
         {
             var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes) ?? new Dictionary<string, object>();
 
-            keyValuePairs.TryGetValue(ClaimTypes.Role, out object roles);
+            keyValuePairs.TryGetValue(ClaimTypes.Role, out var roles);
 
             if (roles != null)
             {
-                if (roles.ToString().Trim().StartsWith("["))
+                if (roles.ToString()!.Trim().StartsWith("["))
                 {
-                    var parsedRoles = JsonSerializer.Deserialize<string[]>(roles.ToString());
+                    var parsedRoles = JsonSerializer.Deserialize<string[]>(roles.ToString() ?? "");
+                    claims.AddRange(parsedRoles!.Select(parsedRole => new Claim(ClaimTypes.Role, parsedRole)));
 
-                    foreach (var parsedRole in parsedRoles)
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, parsedRole));
-                    }
                 }
-                else
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, roles.ToString()));
-                }
-
+                else claims.Add(new Claim(ClaimTypes.Role, roles.ToString() ?? ""));
                 keyValuePairs.Remove(ClaimTypes.Role);
             }
 
-            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString() ?? "")));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return new List<Claim>();
         }
@@ -85,7 +94,7 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         return claims;
     }
 
-    private byte[] ParseBase64WithoutPadding(string base64)
+    private static byte[] ParseBase64WithoutPadding(string base64)
     {
         switch (base64.Length % 4)
         {

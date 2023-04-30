@@ -18,7 +18,7 @@ public static class CorsConfiguration
             {
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
-                policy.SetIsOriginAllowed(host =>true);
+                policy.SetIsOriginAllowed(_ => true);
                 policy.AllowCredentials();
             });
         });

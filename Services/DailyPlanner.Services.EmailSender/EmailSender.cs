@@ -1,5 +1,4 @@
 ﻿using DailyPlanner.Services.EmailSender.Models;
-using Microsoft.Extensions.Logging;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

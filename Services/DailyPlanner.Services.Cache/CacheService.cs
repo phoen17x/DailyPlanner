@@ -11,12 +11,7 @@ public class CacheService : ICacheService
     /// <summary>
     /// The default lifetime of a cache entry.
     /// </summary>
-    private TimeSpan defaultLifetime;
-
-    /// <summary>
-    /// The configuration settings for the cache service.
-    /// </summary>
-    private readonly CacheSettings settings;
+    private readonly TimeSpan defaultLifetime;
 
     /// <summary>
     /// The Redis database used for caching data.
@@ -31,12 +26,12 @@ public class CacheService : ICacheService
     /// <summary>
     /// A lazily-initialized connection to the Redis server.
     /// </summary>
-    private static Lazy<ConnectionMultiplexer> lazyConnection = new(() => ConnectionMultiplexer.Connect(redisUri));
+    private static readonly Lazy<ConnectionMultiplexer> LazyConnection = new(() => ConnectionMultiplexer.Connect(redisUri ?? ""));
 
     /// <summary>
     /// Gets the connection to the Redis server.
     /// </summary>
-    private static ConnectionMultiplexer Connection => lazyConnection.Value;
+    private static ConnectionMultiplexer Connection => LazyConnection.Value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CacheService"/> class.
@@ -44,9 +39,8 @@ public class CacheService : ICacheService
     /// <param name="settings">The configuration settings for the cache service.</param>
     public CacheService(CacheSettings settings)
     {
-        this.settings = settings;
-        redisUri = this.settings.Uri;
-        defaultLifetime = TimeSpan.FromMinutes(this.settings.Lifetime);
+        redisUri = settings.Uri;
+        defaultLifetime = TimeSpan.FromMinutes(settings.Lifetime);
         cacheDatabase = Connection.GetDatabase();
     }
 

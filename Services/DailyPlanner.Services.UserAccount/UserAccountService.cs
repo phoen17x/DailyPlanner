@@ -7,9 +7,6 @@ using DailyPlanner.Services.Actions;
 using DailyPlanner.Services.EmailSender.Models;
 using DailyPlanner.Services.UserAccount.Models;
 using Microsoft.AspNetCore.Identity;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System;
-using Microsoft.EntityFrameworkCore;
 
 namespace DailyPlanner.Services.UserAccount;
 
@@ -177,7 +174,7 @@ public class UserAccountService : IUserAccountService
     {
         var user = await userManager.FindByIdAsync(userId.ToString());
         ProcessException.ThrowIfNull(user, "The user was not found.");
-        return await userManager.GeneratePasswordResetTokenAsync(user);
+        return await userManager.GeneratePasswordResetTokenAsync(user!);
     }
 
     public async Task SendPasswordRecoveryLinkAsync(SendEmailWithLinkModel model)

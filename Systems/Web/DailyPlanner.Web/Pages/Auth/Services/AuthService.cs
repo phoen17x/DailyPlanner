@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using DailyPlanner.Web.Pages.Auth.Models;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace DailyPlanner.Web.Pages.Auth.Services;
 

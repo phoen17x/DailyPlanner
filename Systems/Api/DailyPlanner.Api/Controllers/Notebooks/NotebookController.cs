@@ -38,8 +38,6 @@ public class NotebookController : ControllerBase
     /// <summary>
     /// Gets a list of notebooks.
     /// </summary>
-    /// <param name="offset">The offset to start from.</param>
-    /// <param name="limit">The maximum number of notebooks to return.</param>
     /// <returns>A collection of <see cref="NotebookResponse"/> objects.</returns>
     [HttpGet]
     [Authorize(AppScopes.PlannerAccess)]

@@ -15,11 +15,11 @@ public class UserAccountResponse
     /// <summary>
     /// Gets or sets the name of the user.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     /// <summary>
     /// Gets or sets the user email.
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 }
 
 /// <summary>

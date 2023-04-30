@@ -5,7 +5,7 @@ namespace DailyPlanner.Services.Notebooks;
 public interface INotebookService
 {
     /// <summary>
-    /// Gets a collection of notebooks with optional offset and limit.
+    /// Gets a collection of notebooks.
     /// </summary>
     /// <param name="userId">User identifier.</param>
     /// <returns>Collection of <see cref="NotebookModel"/> objects.</returns>

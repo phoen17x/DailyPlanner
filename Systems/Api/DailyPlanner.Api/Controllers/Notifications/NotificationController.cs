@@ -34,6 +34,10 @@ public class NotificationController : ControllerBase
         this.notificationService = notificationService;
     }
 
+    /// <summary>
+    /// Retrieves notifications for the current user.
+    /// </summary>
+    /// <returns>A collection of <see cref="NotificationResponse"/> objects representing the user's notifications.</returns>
     [HttpGet]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IEnumerable<NotificationResponse>), 200)]
@@ -44,6 +48,11 @@ public class NotificationController : ControllerBase
         return mapper.Map<IEnumerable<NotificationResponse>>(notifications);
     }
 
+    /// <summary>
+    /// Marks a notification as read.
+    /// </summary>
+    /// <param name="notificationId">The ID of the notification to mark as read.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the HTTP response.</returns>
     [HttpPut("mark-as-read/{notificationId}")]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IActionResult), 200)]
@@ -54,16 +63,25 @@ public class NotificationController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Marks all notifications for the current user as read.
+    /// </summary>
+    /// <returns>An <see cref="IActionResult"/> representing the HTTP response.</returns>
     [HttpPut("mark-as-read")]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IActionResult), 200)]
-    public async Task<IActionResult> MarkAllAsRead([FromRoute] int notificationId)
+    public async Task<IActionResult> MarkAllAsRead()
     {
         var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
         await notificationService.MarkAllAsRead(userId);
         return Ok();
     }
 
+    /// <summary>
+    /// Deletes a notification.
+    /// </summary>
+    /// <param name="notificationId">The ID of the notification to delete.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the HTTP response.</returns>
     [HttpDelete("{notificationId}")]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IActionResult), 200)]
@@ -74,10 +92,14 @@ public class NotificationController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Deletes all notifications for the current user.
+    /// </summary>
+    /// <returns>An <see cref="IActionResult"/> representing the HTTP response.</returns>
     [HttpDelete]
     [Authorize(AppScopes.PlannerAccess)]
     [ProducesResponseType(typeof(IActionResult), 200)]
-    public async Task<IActionResult> DeleteAllNotifications([FromRoute] int notificationId)
+    public async Task<IActionResult> DeleteAllNotifications()
     {
         var userId = Guid.Parse((ReadOnlySpan<char>)User.FindFirstValue(ClaimTypes.NameIdentifier));
         await notificationService.DeleteAllNotifications(userId);

@@ -2,6 +2,9 @@
 
 namespace DailyPlanner.Services.UserAccount.Models;
 
+/// <summary>
+/// Represents the data required for changing a user's password.
+/// </summary>
 public class ChangePasswordModel
 {
     public string Token { get; set; }
@@ -10,6 +13,9 @@ public class ChangePasswordModel
     public string ConfirmationPassword { get; set; }
 }
 
+/// <summary>
+/// Validates the <see cref="ChangePasswordModel"/>.
+/// </summary>
 public class ChangePasswordModelValidator : AbstractValidator<ChangePasswordModel>
 {
     public ChangePasswordModelValidator()

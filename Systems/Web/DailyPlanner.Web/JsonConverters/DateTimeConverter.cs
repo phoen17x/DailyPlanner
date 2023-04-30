@@ -4,10 +4,18 @@ using System.Text.Json;
 
 namespace DailyPlanner.Web.JsonConverters;
 
+/// <summary>
+/// Converts a string representation of a date and time in the specified format to a <see cref="DateTime"/> object during deserialization,
+/// and serializes a <see cref="DateTime"/> object to a string representation of a date and time in the specified format during serialization.
+/// </summary>
 public class DateTimeConverter : JsonConverter<DateTime>
 {
     private readonly string format;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DateTimeConverter"/> class.
+    /// </summary>
+    /// <param name="format">The date and time format string used for serialization and deserialization.</param>
     public DateTimeConverter(string format)
     {
         this.format = format;

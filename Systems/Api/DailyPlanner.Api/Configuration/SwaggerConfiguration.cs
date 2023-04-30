@@ -14,7 +14,7 @@ namespace DailyPlanner.Api.Configuration;
 /// </summary>
 public static class SwaggerConfiguration
 {
-    private static string appTitle = "Daily Planner API";
+    private static readonly string appTitle = "Daily Planner API";
 
     /// <summary>
     /// Adds Swagger to the specified <see cref="IServiceCollection"/>.

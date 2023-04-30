@@ -25,6 +25,7 @@ public class NotificationService : INotificationService
     /// <param name="contextFactory">Factory that provides access to the <see cref="DailyPlannerContext"/>.</param>
     /// <param name="mapper">Object mapper that maps entities to models and vice versa.</param>
     /// <param name="addNotificationModelValidator">Validator for <see cref="AddNotificationModel"/>.</param>
+    /// <param name="hubContext">The hub context for the <see cref="NotificationHub"/>.</param>
     public NotificationService(
         IDbContextFactory<DailyPlannerContext> contextFactory,
         IMapper mapper,
@@ -100,7 +101,7 @@ public class NotificationService : INotificationService
 
         if (notification!.IsMarkedAsRead) return;
 
-        notification!.IsMarkedAsRead = true;
+        notification.IsMarkedAsRead = true;
         context.Notifications.Update(notification);
         await context.SaveChangesAsync();
     }
