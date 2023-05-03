@@ -34,3 +34,4 @@ API: http://localhost:10000
 Swagger: http://localhost:10000/api/index.html  
 Web Client: http://localhost:10002  
 
+.NET 7 is used.
